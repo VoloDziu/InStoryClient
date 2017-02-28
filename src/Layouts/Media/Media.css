@@ -1,0 +1,12 @@
+.l-media {
+  display: flex;
+  width: 100%;
+
+  &__body {
+    flex: 1;
+  }
+
+  &__figure {
+
+  }
+}

@@ -8,14 +8,16 @@ const NODE_ENV = process.env.NODE_ENV || 'development'
 const getPlugins = () => {
   let plugins = []
 
-  plugins.push(new CleanWebpackPlugin(['app'], {
+  plugins.push(new CleanWebpackPlugin(['instory'], {
+    root: path.resolve('/', 'Users', 'velz', 'webserver'),
     exclude: ['index.html']
   }))
 
   plugins.push(new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(NODE_ENV)
-    }
+    },
+    SERVER_URL: JSON.stringify('https://localhost.com/server')
   }))
 
   plugins.push(new ExtractTextPlugin('styles.css'))
@@ -26,7 +28,7 @@ const getPlugins = () => {
 const config = {
   entry: path.resolve(__dirname, 'src', 'index'),
   output: {
-    path: path.resolve(__dirname, 'app'),
+    path: path.resolve('/', 'Users', 'velz', 'webserver', 'instory'),
     filename: 'index.js'
   },
   resolve: {

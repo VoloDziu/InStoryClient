@@ -1,0 +1,12 @@
+{
+  "name": "store",
+  "main": "store.js",
+  "standard": {
+    "globals": [
+      "chrome",
+      "fetch",
+      "localStorage",
+      "SERVER_URL"
+    ]
+  }
+}

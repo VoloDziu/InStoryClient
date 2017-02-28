@@ -1,0 +1,26 @@
+.l-view-split {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: stretch;
+
+  &__section {
+    /* ... */
+  }
+    &__section--main {
+      flex: 1;
+    }
+}
+  .l-view-split--fixed {
+    height: 100%;
+
+    & > .l-view-split__section {
+      overflow: auto;
+    }
+  }
+  .l-view-split--horizontal {
+    flex-direction: row;
+  }
+  .l-view-split--vertical {
+    flex-direction: column;
+  }

@@ -1,0 +1,8 @@
+.l-grid {
+  display: flex;
+  flex-wrap: wrap;
+
+  &__item {
+    display: flex;
+  }
+}

@@ -1,0 +1,10 @@
+.l-list-inline {
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+
+  & > .l-list-inline__item {
+    display: flex;
+    align-items: center;
+  }
+}

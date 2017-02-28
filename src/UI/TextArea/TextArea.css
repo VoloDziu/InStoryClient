@@ -1,0 +1,22 @@
+@import '../../variables.css';
+
+
+.ui-text-area {
+  display: block;
+  width: 100%;
+  padding: calc(var(--baseline) / 2) calc(var(--baseline) * 1);
+
+  font-size: 0.938rem;
+  font-weight: 400;
+
+  color: var(--color__greyDD);
+
+  background: none;
+  border: 1px solid var(--color__greyL);
+  border-radius: 0.188rem;
+
+  resize: none;
+}
+  .ui-text-area--error {
+    border-color: var(--color__red);
+  }

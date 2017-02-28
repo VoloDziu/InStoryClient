@@ -1,0 +1,22 @@
+@import '../../variables.css';
+
+.selected-image-view {
+  min-height: 30rem;
+  width: 100%;
+  padding: calc(var(--baseline) * 2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color__greyD);
+
+  &__img {
+    display: block;
+
+    & img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+}

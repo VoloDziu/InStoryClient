@@ -1,0 +1,9 @@
+@import '../../variables.css';
+
+.sidebar {
+  padding: var(--baseline) calc(var(--baseline) * 1.5);
+  height: 100%;
+  width: calc(var(--baseline) * 32);
+
+  border-right: 1px solid var(--color__greyL);
+}

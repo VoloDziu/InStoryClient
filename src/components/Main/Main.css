@@ -1,0 +1,6 @@
+@import '../../variables.css';
+
+.main {
+  padding: var(--baseline) calc(var(--baseline) * 1.5);
+  height: 100%;
+}

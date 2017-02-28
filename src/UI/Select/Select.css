@@ -1,0 +1,50 @@
+@import '../../variables.css';
+
+.ui-select {
+  width: 100%;
+  position: relative;
+
+  &:before {
+    content:'\25BE';
+    display: block;
+    position: absolute;
+    top: 0; right: var(--baseline);
+    line-height: calc(var(--baseline) * 3);
+    font-size: 1rem;
+    color: var(--color__greyDD);
+  }
+
+  &__fake {
+    padding: 0 calc(var(--baseline) * 1);
+    padding-right: calc(var(--baseline) * 2);
+
+    font-family: var(--font__family);
+    font-size: 0.875rem;
+    line-height: calc(var(--baseline) * 3);
+    font-weight: 400;
+
+    color: var(--color__greyDD);
+
+    border: 1px solid var(--color__greyL);
+    border-radius: 0.188rem;
+    background: white;
+  }
+
+  &__input {
+    appearance: none;
+    opacity: 0;
+
+    display: block;
+    width: 100%;
+
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    z-index: 1;
+  }
+}
+  .ui-select--inverse {
+    & .ui-select__fake {
+      border: none;
+    }
+  }

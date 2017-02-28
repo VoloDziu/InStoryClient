@@ -1,3 +1,20 @@
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700';
+@import 'https://fonts.googleapis.com/css?family=Nunito:300,400';
+
 :root {
-  --colorBg: red;
+  --font__family: 'Open Sans', sans-serif;
+  --baseline: 0.750rem;
+
+  --color__darkBlue:  #405065;
+
+  --color__blue:  #2E84E8;
+  --color__red:   #FF6363;
+  --color__green: #6EB96F;
+  --color__teal: #A8DBF4;
+
+  --color__greyDD: #2C3643;
+  --color__greyD: #404f63;
+  --color__greyM: #818990;
+  --color__greyL: #b1bac1;
+
 }

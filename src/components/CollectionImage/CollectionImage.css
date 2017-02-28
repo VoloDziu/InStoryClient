@@ -1,0 +1,40 @@
+@import '../../variables.css';
+
+.collection-image {
+  position: relative;
+  margin: calc(var(--baseline) * 1);
+  display: flex;
+
+  cursor: pointer;
+
+  &__img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 10rem;
+    overflow: hidden;
+
+    & > img {
+      display: block;
+      max-width: 100%;
+    }
+  }
+}
+  .collection-image--collected {
+    background: color(var(--color__green) alpha(-50%));
+  }
+  .collection-image--selected {
+    &:after {
+      position: absolute;
+      content: '';
+      width: 1rem; height: 1rem;
+
+      transform: rotateZ(45deg);
+
+      bottom: -1.5rem;
+      left: 50%;
+      margin-left: -0.5rem;
+
+      background: var(--color__greyD);
+    }
+  }

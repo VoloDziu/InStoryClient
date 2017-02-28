@@ -1,0 +1,41 @@
+@import '../../variables.css';
+
+.l-input-group {
+  /* ... */
+
+  &__label {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    color: var(--color__greyD);
+  }
+
+  &__error {
+    font-size: 0.750rem;
+    color: var(--color__red);
+  }
+
+  &__body {
+    /* ... */
+  }
+}
+  .l-input-group--error {
+    & > .l-input-group__label {
+      color: var(--color__red);
+    }
+  }
+  .l-input-group--inline {
+    position: relative;
+
+    & > .l-input-group__label {
+      width: calc(var(--spacing-baseline) * 5);
+      text-align: right;
+    }
+
+    & > .l-input-group__error {
+      position: absolute;
+      right: 0; left: 0;
+      top: 100%;
+
+      text-align: right;
+    }
+  }

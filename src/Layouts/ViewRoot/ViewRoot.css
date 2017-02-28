@@ -1,0 +1,6 @@
+.view-root {
+  min-height: 100vh;
+}
+  .view-root--fixed {
+    height: 100vh;
+  }

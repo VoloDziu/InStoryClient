@@ -1,0 +1,33 @@
+@import '../../variables.css';
+
+
+.ui-text-input {
+  display: block;
+  width: 100%;
+  height: calc(var(--baseline) * 3);
+  padding: 0 var(--baseline);
+
+  font-family: var(--font__family);
+  font-size: 0.875rem;
+  line-height: calc(var(--baseline) * 3);
+
+  background: white;
+  border: 1px solid var(--color__greyL);
+  border-radius: 0.125rem;
+}
+  .ui-text-input--error {
+    border-color: var(--color__red);
+  }
+  .ui-text-input--inverse {
+    border-color: transparent;
+  }
+  .ui-text-input--with-prefix {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+  }
+  .ui-text-input--with-suffix {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+  }

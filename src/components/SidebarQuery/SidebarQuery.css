@@ -1,0 +1,57 @@
+@import '../../variables.css';
+
+.sidebar-query {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  opacity: 0.2;
+
+  &__body {
+    cursor: pointer;
+  }
+
+  &__query {
+    display: inline-block;
+    padding:  calc(var(--baseline) * 3/4)
+              0
+              calc(var(--baseline) * 3/4)
+              calc(var(--baseline));
+    cursor: pointer;
+
+    color: var(--color__greyD);
+
+    border-left: 5px solid transparent;
+  }
+
+  &__timestamp {
+    width: 4rem;
+    padding:  calc(var(--baseline) * 3/4)
+              var(--baseline)
+              calc(var(--baseline) * 3/4)
+              0;
+
+    font-size: 0.750rem;
+
+    text-align: right;
+    color: var(--color__greyM);
+
+    white-space: nowrap;
+  }
+
+  &__counter {
+    width: 1.5rem;
+
+    font-size: 0.750rem;
+
+    text-align: center;
+    color: var(--color__greyM);
+  }
+}
+  .sidebar-query--selected {
+    opacity: 1;
+
+    & .sidebar-query__query {
+      border-color: var(--color__teal);
+    }
+  }
