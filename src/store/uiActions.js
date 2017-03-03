@@ -12,11 +12,13 @@ export const toggleSelectQueries = (
 }
 
 export const toggleSelectQuery = (
-  query
+  query,
+  forceValue = null
 ) => {
   return {
     type: TOGGLE_SELECT_QUERY,
-    query
+    query,
+    forceValue
   }
 }
 

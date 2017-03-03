@@ -24,11 +24,13 @@ const Flex = ({
 
 const FlexItem = ({
   children,
+  alignSelf = 'auto',
   main = false,
   spacing = 0
 }) => {
   const style = {
-    marginLeft: `${spacing * 0.750}rem`
+    marginLeft: `${spacing * 0.750}rem`,
+    alignSelf
   }
 
   if (main) {

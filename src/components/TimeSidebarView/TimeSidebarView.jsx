@@ -3,7 +3,6 @@ import moment from 'moment'
 import {connect} from 'react-redux'
 
 import Box from '../../Layouts/Box'
-import {List, ListItem} from '../../Layouts/List'
 import SidebarTimestamp from '../SidebarTimestamp'
 import SidebarQuery from '../SidebarQuery'
 
@@ -35,7 +34,7 @@ const TimeSidebarView = ({
     <div>
       {orderedDays.map((d, i) =>
         <div key={i}>
-          <Box t={1.5} b={1.5}>
+          <Box t={1.5} b={1.5} l={1.5} r={1.5}>
             <SidebarTimestamp
               queries={queriesByDate[d]}
               timestamp={d} />
@@ -63,8 +62,7 @@ export default connect(
   state => {
     return {
       queries: state.history.history
-        ? state.history.history.topics
-          .reduce((acc, topic) => [...acc, ...topic.queries], [])
+        ? state.history.history.queries
         : []
     }
   }

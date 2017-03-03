@@ -1,9 +1,10 @@
-import {REQUEST_HISTORY, RECEIVE_HISTORY} from './historyActions'
+import {REQUEST_HISTORY, RECEIVE_HISTORY, UPDATE_HISTORY} from './historyActions'
 
 const historyReducer = (
   state = {
     history: null,
-    isFetching: false
+    isFetching: false,
+    isUpdating: false
   },
   action
 ) => {
@@ -15,8 +16,14 @@ const historyReducer = (
     case RECEIVE_HISTORY:
       return Object.assign({}, state, {
         isFetching: false,
+        isUpdating: false,
         history: action.history
       })
+    case UPDATE_HISTORY:
+      return Object.assign({}, state, {
+        isUpdating: true
+      })
+
     default:
       return state
   }

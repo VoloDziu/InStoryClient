@@ -10,6 +10,7 @@ import './SidebarTimestamp.css'
 const SidebarTimestamp = ({
   timestamp,
   isSelected,
+  isUpdating,
   toggleSelectQueries
 }) => {
   let time = timestamp
@@ -27,7 +28,13 @@ const SidebarTimestamp = ({
     <div className={classes}>
       <div
         className="sidebar-timestamp__date"
-        onClick={toggleSelectQueries}>{time}</div>
+        onClick={() => {
+          if (isUpdating) {
+            return
+          } else {
+            toggleSelectQueries()
+          }
+        }}>{time}</div>
     </div>
   )
 }
@@ -39,7 +46,8 @@ export default connect(
     const selectedQueriesDates = state.ui.selectedQueries.map(q => moment(q.timestamp).format('MMM Do YY'))
 
     return {
-      isSelected: state.ui.selectedQueries.length === 0 || selectedQueriesDates.indexOf(timestamp) !== -1
+      isSelected: state.ui.selectedQueries.length === 0 || selectedQueriesDates.indexOf(timestamp) !== -1,
+      isUpdating: state.ui.isUpdating
     }
   },
   (dispatch, ownProps) => {

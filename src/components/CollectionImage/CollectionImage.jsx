@@ -2,12 +2,17 @@ import React from 'react'
 import {connect} from 'react-redux'
 import classnames from 'classnames'
 
+import {Flex, FlexItem} from '../../Layouts/Flex'
 import {toggleSelectImage} from '../../store/uiActions'
+import {deleteImage} from '../../store/historyActions'
 
 import './CollectionImage.css'
+import deleteIcon from './delete.svg'
 
 const CollectionImage = ({
   img,
+  userId,
+  deleteImage,
   toggleSelectImage,
   isSelected
 }) => {
@@ -18,18 +23,29 @@ const CollectionImage = ({
 
   return (
     <div
-      className={classes}
-      onClick={toggleSelectImage}>
-      <div
-        className="collection-image__img">
-        <img
-          src={img.thumbSrc} />
-      </div>
+      className={classes}>
+      <Flex
+        alignItems="center"
+        justifyContent="center">
+        <FlexItem>
+          <div
+            className="ci-image">
+            <div
+              onClick={toggleSelectImage}
+              className="ci-image__thumb">
+              <img
+                src={img.thumbSrc} />
+            </div>
 
-      {img.isCollected
-        ? <div className="collection-image__badge" />
-        : ''
-      }
+            <button
+              style={{
+                backgroundImage: `url(${deleteIcon})`
+              }}
+              onClick={() => deleteImage(userId)}
+              className="ci-image__delete" />
+          </div>
+        </FlexItem>
+      </Flex>
     </div>
   )
 }
@@ -39,6 +55,7 @@ export default connect(
     const {img} = ownProps
 
     return {
+      userId: state.user.id,
       isSelected: state.ui.selectedImage && state.ui.selectedImage._id === img._id
     }
   },
@@ -48,6 +65,9 @@ export default connect(
     return {
       toggleSelectImage: () => {
         dispatch(toggleSelectImage(img))
+      },
+      deleteImage: (userId) => {
+        dispatch(deleteImage(userId, img._id))
       }
     }
   }

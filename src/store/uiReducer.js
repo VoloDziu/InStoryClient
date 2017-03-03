@@ -23,15 +23,20 @@ const uiReducer = (
       const queryIndex = state.selectedQueries.indexOf(action.query)
 
       if (queryIndex === -1) {
-        return Object.assign({}, state, {
-          selectedQueries: [...state.selectedQueries, action.query]
-        })
+        if (action.forceValue !== false) {
+          return Object.assign({}, state, {
+            selectedQueries: [...state.selectedQueries, action.query]
+          })
+        }
       } else {
-        return Object.assign({}, state, {
-          selectedQueries: [...state.selectedQueries.slice(0, queryIndex),
-                            ...state.selectedQueries.slice(queryIndex + 1)]
-        })
+        if (action.forceValue !== true) {
+          return Object.assign({}, state, {
+            selectedQueries: [...state.selectedQueries.slice(0, queryIndex),
+              ...state.selectedQueries.slice(queryIndex + 1)]
+          })
+        }
       }
+      return state
     case TOGGLE_SELECT_QUERIES:
       let newState = Object.assign({}, state)
 

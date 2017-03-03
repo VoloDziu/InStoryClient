@@ -38,17 +38,15 @@ const TimeCollectionView = ({
             <CollectionTimestamp timestamp={d} />
           </Box>
 
-          <Box t={0} b={0} l={1} r={1}>
-            <CollectionImagesList images={imagesByDate[d]
-                .sort((imgA, imgB) => {
-                  if (imgA.timestamp > imgB.timestamp) {
-                    return -1
-                  } else {
-                    return 1
-                  }
-                })
-              } />
-          </Box>
+          <CollectionImagesList images={imagesByDate[d]
+              .sort((imgA, imgB) => {
+                if (imgA.timestamp > imgB.timestamp) {
+                  return -1
+                } else {
+                  return 1
+                }
+              })
+            } />
         </div>
       )}
     </div>
@@ -57,28 +55,14 @@ const TimeCollectionView = ({
 
 export default connect(
   state => {
-    const images = state.history.history
-      ? state.history.history.topics
-        .reduce((acc, topic) => {
-          let topicQueries = []
+    const {ui: {selectedQueries}, history: {history}} = state
+    let images = history ? history.images : []
 
-          for (let query of topic.queries) {
-            let images = query.images
-              .map(i => {
-                return Object.assign({}, i, {
-                  query
-                })
-              })
+    console.log(selectedQueries, history)
 
-            if (state.ui.selectedQueries.length) {
-              images = images.filter(i => state.ui.selectedQueries.indexOf(i.query) !== -1)
-            }
-            topicQueries = [...topicQueries, ...images]
-          }
-
-          return [...topicQueries, ...acc]
-        }, [])
-      : []
+    if (selectedQueries.length) {
+      images = images.filter(img => selectedQueries.map(q => q._id).indexOf(img.queryId) !== -1)
+    }
 
     return {
       images

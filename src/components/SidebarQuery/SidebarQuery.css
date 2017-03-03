@@ -2,6 +2,7 @@
 
 .sidebar-query {
   width: 100%;
+  padding: 0 calc(var(--baseline) / 2);
   display: flex;
   align-items: center;
 
@@ -11,25 +12,20 @@
     cursor: pointer;
   }
 
+  &__actions {
+    min-width: 3rem;
+  }
+
+  &__action {
+    display: none;
+  }
+
   &__query {
-    display: inline-block;
-    padding:  calc(var(--baseline) * 3/4)
-              0
-              calc(var(--baseline) * 3/4)
-              calc(var(--baseline));
-    cursor: pointer;
-
     color: var(--color__greyD);
-
-    border-left: 5px solid transparent;
   }
 
   &__timestamp {
     width: 4rem;
-    padding:  calc(var(--baseline) * 3/4)
-              var(--baseline)
-              calc(var(--baseline) * 3/4)
-              0;
 
     font-size: 0.750rem;
 
@@ -40,18 +36,36 @@
   }
 
   &__counter {
-    width: 1.5rem;
+    width: 2.5rem;
+    height: 100%;
+    min-height: 2.25rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     font-size: 0.750rem;
 
-    text-align: center;
-    color: var(--color__greyM);
+    border-left: 5px solid transparent;
+  }
+
+  &:hover {
+    background: color(var(--color__greyL) alpha(-90%));
   }
 }
   .sidebar-query--selected {
     opacity: 1;
 
-    & .sidebar-query__query {
-      border-color: var(--color__teal);
+    & .sidebar-query__counter {
+      border-left: 5px solid var(--color__teal);
+      border-right: 1px solid var(--color__greyL);
+    }
+
+    &:hover {
+      /**/
+
+      & .sidebar-query__action {
+        display: block;
+      }
     }
   }

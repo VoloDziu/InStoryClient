@@ -1,67 +1,85 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import {getUserId} from '../../store/userActions'
+import {fetchHistory} from '../../store/historyActions'
 
-import ViewRoot from '../../Layouts/ViewRoot'
-import InStory from '../InStory'
-import LoginForm from '../LoginForm'
+import {ViewSplit, ViewSplitSection} from '../../Layouts/ViewSplit'
+import TimeCollectionView from '../TimeCollectionView'
+import TopicCollectionView from '../TopicCollectionView'
+import TimeSidebarView from '../TimeSidebarView'
+import TopicSidebarView from '../TopicSidebarView'
 import Loading from '../Loading'
+import ArrangementTabs from '../ArrangementTabs'
+
+import './App.css'
 
 class App extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      timeoutId: null
-    }
-  }
-
   componentWillMount () {
-    this.state.timeoutId = setInterval(() => {
-      let extensionDiv = document.getElementById('InStoryExtensionId')
+    const {userId, fetchHistory} = this.props
 
-      if (extensionDiv) {
-        clearTimeout(this.state.timeoutId)
-        this.props.getUserId(extensionDiv.dataset.id)
-      }
-    }, 100)
+    fetchHistory(userId)
   }
 
   render () {
-    const {userId, isFetching} = this.props
+    const {isFetching, collectionArrangement} = this.props
 
-    let content = null
     if (isFetching) {
-      content = <Loading />
+      return <Loading />
     } else {
-      if (userId) {
-        content = <InStory />
-      } else {
-        content = <LoginForm />
+      let content = ''
+      let sidebar = ''
+      if (collectionArrangement === 'time') {
+        sidebar = <TimeSidebarView />
+        content = <TimeCollectionView />
+      } else if (collectionArrangement === 'topic') {
+        sidebar = <TopicSidebarView />
+        content = <TopicCollectionView />
       }
-    }
 
-    return (
-      <ViewRoot
-        fixed>
-        {content}
-      </ViewRoot>
-    )
+      return (
+        <div className="app">
+          <ViewSplit
+            horizontal
+            fixed>
+            <ViewSplitSection>
+              <div className="app__sidebar">
+                <ViewSplit
+                  fixed>
+                  <ViewSplitSection>
+                    <ArrangementTabs />
+                  </ViewSplitSection>
+
+                  <ViewSplitSection
+                    main>
+                    {sidebar}
+                  </ViewSplitSection>
+                </ViewSplit>
+              </div>
+            </ViewSplitSection>
+
+            <ViewSplitSection
+              main>
+              {content}
+            </ViewSplitSection>
+          </ViewSplit>
+        </div>
+      )
+    }
   }
 }
 
 export default connect(
   state => {
     return {
-      userId: state.user.id,
-      isFetching: state.user.isFetching
+      collectionArrangement: state.config.collectionArrangement,
+      isFetching: state.history.isFetching,
+      userId: state.user.id
     }
   },
-  dispatch => {
+  (dispatch, ownProps) => {
     return {
-      getUserId: (extensionId) => {
-        dispatch(getUserId(extensionId))
+      fetchHistory: (userId) => {
+        dispatch(fetchHistory(userId))
       }
     }
   }

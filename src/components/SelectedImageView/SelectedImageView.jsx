@@ -1,8 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import Button from '../../UI/Button'
-
 import './selectedImageView.css'
 
 const SelectedImageView = ({
@@ -12,6 +10,7 @@ const SelectedImageView = ({
     <div className="selected-image-view">
       <a
         href={selectedImage.url}
+        target="_blank"
         className="selected-image-view__img">
         <img src={selectedImage.src} />
       </a>

@@ -1,0 +1,12 @@
+@import '../../variables.css';
+
+.app {
+  height: 100vh;
+
+  &__sidebar {
+    height: 100%;
+    width: calc(var(--baseline) * 32);
+
+    border-right: 1px solid var(--color__greyL);
+  }
+}

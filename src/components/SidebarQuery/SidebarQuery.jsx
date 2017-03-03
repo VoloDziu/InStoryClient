@@ -3,7 +3,8 @@ import classnames from 'classnames'
 import {connect} from 'react-redux'
 import moment from 'moment'
 
-import {toggleSelectQuery, deleteQuery} from '../../store/uiActions'
+import {toggleSelectQuery} from '../../store/uiActions'
+import {deleteQuery} from '../../store/historyActions'
 
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
@@ -14,8 +15,12 @@ class SidebarQuery extends React.Component {
   render () {
     const {
       query,
+      imagesCount,
+      userId,
       isSelected,
-      toggleSelectQuery
+      isUpdating,
+      toggleSelectQuery,
+      deleteQuery
     } = this.props
 
     const classes = classnames('sidebar-query', {
@@ -27,7 +32,13 @@ class SidebarQuery extends React.Component {
         <Flex>
           <FlexItem main>
             <div className="sidebar-query__body"
-              onClick={toggleSelectQuery}>
+              onClick={() => {
+                if (isUpdating) {
+                  return
+                } else {
+                  toggleSelectQuery()
+                }
+              }}>
               <Flex>
                 <FlexItem>
                   <div className="sidebar-query__timestamp">
@@ -36,20 +47,44 @@ class SidebarQuery extends React.Component {
                 </FlexItem>
 
                 <FlexItem
+                  alignSelf="stretch"
+                  spacing={1}>
+                  <div className="sidebar-query__counter">
+                    {imagesCount}
+                  </div>
+                </FlexItem>
+
+                <FlexItem
+                  spacing={1}
                   main>
                   <div
                     className="sidebar-query__query">
                     {query.q.replace(/\+/g, ' ')}
                   </div>
                 </FlexItem>
+
               </Flex>
             </div>
           </FlexItem>
 
           <FlexItem
-            spacing={1}>
-            <div className="sidebar-query__counter">
-              {query.images.length}
+            spacing={0.5}>
+            <div
+              className="sidebar-query__actions">
+              <Flex
+                justifyContent="center">
+                <FlexItem>
+                  {isUpdating
+                    ? ''
+                    : <div className="sidebar-query__action">
+                      <Button
+                        link
+                        color="red"
+                        onClick={() => deleteQuery(userId)}>delete</Button>
+                    </div>
+                  }
+                </FlexItem>
+              </Flex>
             </div>
           </FlexItem>
         </Flex>
@@ -63,6 +98,9 @@ export default connect(
     const {query} = ownProps
 
     return {
+      imagesCount: state.history.history.images.filter(img => img.queryId === query._id).length,
+      userId: state.user.id,
+      isUpdating: state.history.isUpdating,
       isSelected: state.ui.selectedQueries.length === 0 || state.ui.selectedQueries.indexOf(query) !== -1
     }
   },
@@ -72,6 +110,10 @@ export default connect(
     return {
       toggleSelectQuery: () => {
         dispatch(toggleSelectQuery(query))
+      },
+      deleteQuery: (userId) => {
+        dispatch(deleteQuery(userId, query._id))
+        dispatch(toggleSelectQuery(query, false))
       }
     }
   }

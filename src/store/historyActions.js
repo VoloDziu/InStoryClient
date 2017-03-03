@@ -1,5 +1,6 @@
 export const REQUEST_HISTORY = 'REQUEST_HISTORY'
 export const RECEIVE_HISTORY = 'RECEIVE_HISTORY'
+export const UPDATE_HISTORY = 'UPDATE_HISTORY'
 
 const requestHistory = () => {
   return {
@@ -16,13 +17,19 @@ const receiveHistory = (
   }
 }
 
+const updateHistory = () => {
+  return {
+    type: UPDATE_HISTORY
+  }
+}
+
 export const fetchHistory = (
   userId
 ) => {
   return dispatch => {
     dispatch(requestHistory())
 
-    fetch(`${SERVER_URL}/histories/${userId}`, {
+    fetch(`${SERVER_URL}/histories/${userId}/`, {
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
@@ -36,5 +43,55 @@ export const fetchHistory = (
         console.error(json.data)
       }
     })
+  }
+}
+
+export const deleteQuery = (
+  userId,
+  queryId
+) => {
+  return dispatch => {
+    dispatch(updateHistory())
+
+    fetch(`${SERVER_URL}/histories/${userId}/queries/${queryId}`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.success) {
+          dispatch(receiveHistory(json.data.history))
+        } else {
+          console.error(json.data)
+        }
+      })
+  }
+}
+
+export const deleteImage = (
+  userId,
+  imageId
+) => {
+  return dispatch => {
+    dispatch(updateHistory())
+
+    fetch(`${SERVER_URL}/histories/${userId}/images/${imageId}`, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.success) {
+          dispatch(receiveHistory(json.data.history))
+        } else {
+          console.error(json.data)
+        }
+      })
   }
 }
