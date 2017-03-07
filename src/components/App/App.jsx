@@ -1,11 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {DragDropContext} from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 import {fetchHistory} from '../../store/historyActions'
 
 import {ViewSplit, ViewSplitSection} from '../../Layouts/ViewSplit'
-import TimeCollectionView from '../TimeCollectionView'
-import TopicCollectionView from '../TopicCollectionView'
+import CollectionView from '../CollectionView'
 import TimeSidebarView from '../TimeSidebarView'
 import TopicSidebarView from '../TopicSidebarView'
 import Loading from '../Loading'
@@ -26,14 +28,11 @@ class App extends React.Component {
     if (isFetching) {
       return <Loading />
     } else {
-      let content = ''
       let sidebar = ''
       if (collectionArrangement === 'time') {
         sidebar = <TimeSidebarView />
-        content = <TimeCollectionView />
       } else if (collectionArrangement === 'topic') {
         sidebar = <TopicSidebarView />
-        content = <TopicCollectionView />
       }
 
       return (
@@ -59,7 +58,7 @@ class App extends React.Component {
 
             <ViewSplitSection
               main>
-              {content}
+              <CollectionView />
             </ViewSplitSection>
           </ViewSplit>
         </div>
@@ -68,19 +67,22 @@ class App extends React.Component {
   }
 }
 
-export default connect(
-  state => {
-    return {
-      collectionArrangement: state.config.collectionArrangement,
-      isFetching: state.history.isFetching,
-      userId: state.user.id
-    }
-  },
-  (dispatch, ownProps) => {
-    return {
-      fetchHistory: (userId) => {
-        dispatch(fetchHistory(userId))
+export default compose(
+  DragDropContext(HTML5Backend),
+  connect(
+    state => {
+      return {
+        collectionArrangement: state.config.collectionArrangement,
+        isFetching: state.history.isFetching,
+        userId: state.user.id
+      }
+    },
+    (dispatch, ownProps) => {
+      return {
+        fetchHistory: (userId) => {
+          dispatch(fetchHistory(userId))
+        }
       }
     }
-  }
+  )
 )(App)

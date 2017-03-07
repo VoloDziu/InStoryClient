@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import {toggleSelectQuery} from '../../store/uiActions'
 import {deleteQuery} from '../../store/historyActions'
-
+import constants from '../../constants'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
 
@@ -101,7 +101,8 @@ export default connect(
       imagesCount: state.history.history.images.filter(img => img.queryId === query._id).length,
       userId: state.user.id,
       isUpdating: state.history.isUpdating,
-      isSelected: state.ui.selectedQueries.length === 0 || state.ui.selectedQueries.indexOf(query) !== -1
+      isSelected: (state.ui.selectedDate === null || state.ui.selectedDate === moment(query.timestamp).format(constants.TIME_FORMAT)) &&
+                  (state.ui.selectedQueries.length === 0 || state.ui.selectedQueries.indexOf(query) !== -1)
     }
   },
   (dispatch, ownProps) => {
@@ -113,7 +114,6 @@ export default connect(
       },
       deleteQuery: (userId) => {
         dispatch(deleteQuery(userId, query._id))
-        dispatch(toggleSelectQuery(query, false))
       }
     }
   }

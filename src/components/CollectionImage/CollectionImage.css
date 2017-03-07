@@ -26,6 +26,9 @@
       background: var(--color__greyD);
     }
   }
+  .collection-image--dragged {
+    opacity: 0.2;
+  }
 
 .ci-image {
   cursor: pointer;

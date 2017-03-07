@@ -1,20 +1,20 @@
-import {TOGGLE_SELECT_QUERY, TOGGLE_SELECT_QUERIES, TOGGLE_SELECT_IMAGE} from './uiActions'
+import moment from 'moment'
 
-const includesAll = (arr, objects) => {
-  for (let obj of objects) {
-    if (arr.indexOf(obj) === -1) {
-      return false
-    }
-  }
+import constants from '../constants'
 
-  return true
-}
+import {
+  TOGGLE_SELECT_QUERY,
+  TOGGLE_SELECT_DATE,
+  TOGGLE_SELECT_IMAGE,
+  TOGGLE_SELECT_COLLECTION
+} from './uiActions'
 
 const uiReducer = (
   state = {
     selectedQueries: [],
+    selectedDate: null,
     selectedImage: null,
-    selectedDate: null
+    selectedCollection: null
   },
   action
 ) => {
@@ -37,19 +37,27 @@ const uiReducer = (
         }
       }
       return state
-    case TOGGLE_SELECT_QUERIES:
-      let newState = Object.assign({}, state)
-
-      if (includesAll(newState.selectedQueries, action.queries)) {
-        newState.selectedQueries = newState.selectedQueries.filter(q =>
-          action.queries.indexOf(q) === -1
-        )
+    case TOGGLE_SELECT_DATE:
+      if (state.selectedDate === action.date) {
+        return Object.assign({}, state, {
+          selectedDate: null
+        })
       } else {
-        newState.selectedQueries = [...newState.selectedQueries,
-                                    ...action.queries]
+        return Object.assign({}, state, {
+          selectedDate: action.date,
+          selectedQueries: state.selectedQueries.filter(q => moment(q.timestamp).format(constants.TIME_FORMAT) === action.date)
+        })
       }
-
-      return newState
+    case TOGGLE_SELECT_COLLECTION:
+      if (state.selectedCollection && action.collection === state.selectedCollection) {
+        return Object.assign({}, state, {
+          selectedCollection: null
+        })
+      } else {
+        return Object.assign({}, state, {
+          selectedCollection: action.collection
+        })
+      }
     case TOGGLE_SELECT_IMAGE:
       if (state.selectedImage && action.image._id === state.selectedImage._id) {
         return Object.assign({}, state, {

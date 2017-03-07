@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import constants from '../../constants'
 
 import './CollectionTimestamp.css'
 
@@ -7,9 +8,9 @@ const CollectionTimestamp = ({
   timestamp
 }) => {
   let time = timestamp
-  if (timestamp === moment().format('MMM Do YY')) {
+  if (timestamp === moment().format(constants.TIME_FORMAT)) {
     time = 'Today'
-  } else if (timestamp === moment().subtract(1, 'days').format('MMM Do YY')) {
+  } else if (timestamp === moment().subtract(1, 'days').format(constants.TIME_FORMAT)) {
     time = 'Yesterday'
   }
 

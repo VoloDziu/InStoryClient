@@ -1,0 +1,59 @@
+@import '../../variables.css';
+
+.sidebar-collection {
+  padding: calc(var(--baseline) / 2);
+
+  &__body {
+    cursor: pointer;
+  }
+
+  &__name {
+    padding: calc(var(--baseline) / 2) 0;
+    line-height: calc(var(--baseline) * 2);
+
+    color: var(--color__greyD);
+  }
+}
+  .sidebar-collection--is-over {
+    border: 1px dashed var(--color__green);
+  }
+  .sidebar-collection--selected {
+    background: var(--color__green);
+  }
+  .sidebar-collection--interactive {
+    /**/
+
+    & .sidebar-collection__actions {
+      display: none;
+    }
+
+    &:hover {
+      background: color(var(--color__greyL) alpha(-90%));
+
+      & .sidebar-collection__actions {
+        display: block;
+      }
+    }
+  }
+
+.sc-icon {
+  position: relative;
+
+  &__counter {
+    position: absolute;
+    bottom: -0.25rem;
+    right: -0.5rem;
+    height: 1rem;
+    min-width: 1rem;
+    padding: 0 0.25rem;
+
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1rem;
+
+    text-align: center;
+
+    background: white;
+    border-radius: 3px;
+  }
+}

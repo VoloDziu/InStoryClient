@@ -23,7 +23,6 @@ const historyReducer = (
       return Object.assign({}, state, {
         isUpdating: true
       })
-
     default:
       return state
   }

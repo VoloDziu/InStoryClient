@@ -2,7 +2,7 @@
 
 .sidebar-query {
   width: 100%;
-  padding: 0 calc(var(--baseline) / 2);
+  padding: 0 calc(var(--baseline) * 0.75);
   display: flex;
   align-items: center;
 
@@ -21,11 +21,12 @@
   }
 
   &__query {
+    padding: calc(var(--baseline) * 0.5) 0;
     color: var(--color__greyD);
   }
 
   &__timestamp {
-    width: 4rem;
+    width: 3.5rem;
 
     font-size: 0.750rem;
 

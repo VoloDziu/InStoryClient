@@ -1,66 +1,64 @@
 import React from 'react'
 import moment from 'moment'
 import {connect} from 'react-redux'
+import Collapse from 'react-collapse'
 
-import Box from '../../Layouts/Box'
-import SidebarTimestamp from '../SidebarTimestamp'
+import {SidebarBody, SidebarBodyItem} from '../SidebarBody'
+
+import Timestamp from '../Timestamp'
 import SidebarQuery from '../SidebarQuery'
-
-const TIME_FORMAT = 'MMM Do YY'
+import constants from '../../constants'
 
 const TimeSidebarView = ({
-  queries
+  queries,
+  selectedDate
 }) => {
-  const queriesByDate = {}
+  let queriesByDay = {}
 
   for (let query of queries) {
-    const timestampDay = moment(query.timestamp).format(TIME_FORMAT)
-    if (queriesByDate[timestampDay]) {
-      queriesByDate[timestampDay].push(query)
+    const queryTimestamp = moment(query.timestamp).format(constants.TIME_FORMAT)
+
+    if (queriesByDay[queryTimestamp]) {
+      queriesByDay[queryTimestamp].push(query)
     } else {
-      queriesByDate[timestampDay] = [query]
+      queriesByDay[queryTimestamp] = [query]
     }
   }
 
-  const orderedDays = Object.keys(queriesByDate).sort((a, b) => {
-    if (moment(a, TIME_FORMAT) > moment(b, TIME_FORMAT)) {
-      return -1
-    } else {
-      return 1
-    }
-  })
+  const days = Object.keys(queriesByDay)
+    .sort((a, b) => {
+      if (moment(a, constants.TIME_FORMAT) > moment(b, constants.TIME_FORMAT)) {
+        return -1
+      } else {
+        return 1
+      }
+    })
 
   return (
-    <div>
-      {orderedDays.map((d, i) =>
-        <div key={i}>
-          <Box t={1.5} b={1.5} l={1.5} r={1.5}>
-            <SidebarTimestamp
-              queries={queriesByDate[d]}
-              timestamp={d} />
-          </Box>
+    <SidebarBody>
+      {days.map((day, i) =>
+        <SidebarBodyItem key={i}>
+          <Timestamp
+            timestamp={day} />
 
-          {queriesByDate[d]
-            .sort((qA, qB) => {
-              if (qA.timestamp > qB.timestamp) {
-                return -1
-              } else {
-                return 1
-              }
-            })
-            .map((q, j) =>
-              <SidebarQuery query={q} key={j} />
-            )
-          }
-        </div>
+          <Collapse
+            isOpened={!selectedDate || selectedDate === day}>
+            {queriesByDay[day].map((q, i) =>
+              <SidebarQuery
+                key={i}
+                query={q} />
+            )}
+          </Collapse>
+        </SidebarBodyItem>
       )}
-    </div>
+    </SidebarBody>
   )
 }
 
 export default connect(
   state => {
     return {
+      selectedDate: state.ui.selectedDate,
       queries: state.history.history
         ? state.history.history.queries
         : []

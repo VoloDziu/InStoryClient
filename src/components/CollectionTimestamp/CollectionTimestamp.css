@@ -3,6 +3,7 @@
 .collection-timestamp {
   width: 100%;
   position: relative;
+  font-size: 0; /* fix for an inline-block spacing inside */
 
   &:before {
     position: absolute;

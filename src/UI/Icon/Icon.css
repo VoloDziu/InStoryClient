@@ -1,0 +1,10 @@
+@import '../../variables.css';
+
+.icon {
+  display: block;
+  width: calc(var(--baseline) * 2);
+  height: calc(var(--baseline) * 2);
+
+  background-position: center center;
+  background-repeat: no-repeat;
+}
