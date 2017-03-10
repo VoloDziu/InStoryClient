@@ -1,3 +1,5 @@
+import {resetSelectedQueries, resetCheckedImages} from './uiActions'
+
 export const REQUEST_HISTORY = 'REQUEST_HISTORY'
 export const RECEIVE_HISTORY = 'RECEIVE_HISTORY'
 export const UPDATE_HISTORY = 'UPDATE_HISTORY'
@@ -46,23 +48,27 @@ export const fetchHistory = (
   }
 }
 
-export const deleteQuery = (
+export const deleteQueries = (
   userId,
-  queryId
+  queryIds
 ) => {
   return dispatch => {
     dispatch(updateHistory())
 
-    fetch(`${SERVER_URL}/histories/${userId}/queries/${queryId}`, {
+    fetch(`${SERVER_URL}/histories/${userId}/queries/`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({
+        queryIds
+      })
     })
       .then(response => response.json())
       .then(json => {
         if (json.success) {
+          dispatch(resetSelectedQueries())
           dispatch(receiveHistory(json.data.history))
         } else {
           console.error(json.data)
@@ -71,23 +77,27 @@ export const deleteQuery = (
   }
 }
 
-export const deleteImage = (
+export const deleteImages = (
   userId,
-  imageId
+  imageIds
 ) => {
   return dispatch => {
     dispatch(updateHistory())
 
-    fetch(`${SERVER_URL}/histories/${userId}/images/${imageId}`, {
+    fetch(`${SERVER_URL}/histories/${userId}/images/`, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({
+        imageIds
+      })
     })
       .then(response => response.json())
       .then(json => {
         if (json.success) {
+          dispatch(resetCheckedImages())
           dispatch(receiveHistory(json.data.history))
         } else {
           console.error(json.data)

@@ -1,0 +1,35 @@
+@import '../../variables.css';
+
+.Checkbox {
+  display: block;
+  position: relative;
+  width: calc(var(--baseline) * 2);
+  height: calc(var(--baseline) * 2);
+
+  &:after {
+    display: block;
+    width: calc(var(--baseline) * 1.5);
+    height: calc(var(--baseline) * 1.5);
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: calc(var(--baseline) * 0.25);
+    left: calc(var(--baseline) * 0.25);
+
+    line-height: calc(var(--baseline) * 1.5);
+
+    text-align: center;
+
+    border: 1px solid var(--color__greyL);
+    border-radius: calc(var(--baseline) / 6);
+    background: white;
+  }
+}
+  .Checkbox--checked {
+    /* ... */
+
+    &:after {
+      content: '\2713';
+      border-color: var(--color__blue);
+    }
+  }

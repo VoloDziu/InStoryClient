@@ -1,0 +1,61 @@
+@import '../../variables.css';
+
+.GalleryImage {
+  position: relative;
+  height: 100%;
+  padding: calc(var(--baseline) * 1);
+
+  &:hover {
+    & .GI-image__checkbox {
+      opacity: 1;
+    }
+  }
+}
+  .GalleryImage--selected {
+    &:after {
+      position: absolute;
+      content: '';
+      width: var(--baseline); height: var(--baseline);
+
+      transform: rotateZ(45deg);
+
+      bottom: -calc(var(--baseline) / 2);
+      left: 50%;
+      margin-left: -calc(var(--baseline) / 2);
+
+      background: var(--color__greyDD);
+    }
+  }
+  .GalleryImage--dragged {
+    opacity: 0.2;
+  }
+  .GalleryImage--checked {
+    /* ... */
+
+    & .GI-image__checkbox {
+      opacity: 1;
+    }
+  }
+
+.GI-image {
+  cursor: pointer;
+  position: relative;
+
+  &__thumb {
+    overflow: hidden;
+    max-height: 10rem;
+
+    & img {
+      display: block;
+      max-width: 100%;
+    }
+  }
+
+  &__checkbox {
+    opacity: 0;
+
+    position: absolute;
+    top: -calc(var(--baseline));
+    left: -calc(var(--baseline));
+  }
+}

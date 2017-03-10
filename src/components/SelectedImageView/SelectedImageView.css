@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
 
-  background: var(--color__greyD);
+  background: var(--color__greyDD);
 
   &__img {
     display: block;

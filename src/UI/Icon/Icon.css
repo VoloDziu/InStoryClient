@@ -8,3 +8,7 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
+  .icon--small {
+    width: calc(var(--baseline) * 1);
+    height: calc(var(--baseline) * 1);
+  }

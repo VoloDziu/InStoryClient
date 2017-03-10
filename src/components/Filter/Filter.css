@@ -1,0 +1,25 @@
+@import '../../variables.css';
+
+.Filter {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+
+  border-bottom: 1px solid color(var(--color__darkBlue) lightness(-7%));
+
+  &__header {
+    /* ... */
+  }
+
+  &__body {
+    flex: 1;
+    overflow: auto;
+  }
+}
+  .Filter--opened {
+    flex: 1;
+
+    & .Filter__header {
+      border-bottom: 1px solid color(var(--color__darkBlue) lightness(-7%));
+    }
+  }

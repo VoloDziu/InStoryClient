@@ -1,0 +1,23 @@
+@import '../../variables.css';
+
+.ImageGallery {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  &__body {
+    flex: 1;
+    overflow: auto;
+  }
+
+  &__actions {
+    padding:  calc(var(--baseline) * 1)
+              calc(var(--baseline) * 1.5);
+
+    font-size: 0.750rem;
+
+    border-top: 1px solid var(--color__greyL);
+    box-shadow: 0 0 20px color(var(--color__greyM) alpha(-50%));
+  }
+}

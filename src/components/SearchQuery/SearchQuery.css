@@ -1,0 +1,27 @@
+@import '../../variables.css';
+
+.SearchQuery {
+  padding: calc(var(--baseline) * 0.25) calc(var(--baseline) * 1.5);
+  cursor: pointer;
+
+  &:hover {
+    background: color(var(--color__teal) lightness(+16%));
+  }
+
+  &__title {
+    /* ... */
+  }
+
+  &__info {
+    width: calc(var(--baseline) * 5);
+
+    font-size: 0.750rem;
+    line-height: calc(var(--baseline) * 1);
+
+    text-align: right;
+    color: var(--color__greyL);
+  }
+}
+  .SearchQuery--selected {
+    background: color(var(--color__teal) lightness(+16%));
+  }

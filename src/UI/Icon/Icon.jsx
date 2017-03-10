@@ -1,19 +1,25 @@
 import React from 'react'
+import classnames from 'classnames'
 
 import './Icon.css'
 
 const Icon = ({
-  children,
-  icon
+  icon,
+  small = false,
+  ...props
 }) => {
   return (
     <div
       style={{
         backgroundImage: `url('${icon}')`
       }}
-      className="icon">
-      {children}
-    </div>
+      className={classnames(
+        'icon',
+        {
+          'icon--small': small
+        }
+      )}
+      {...props} />
   )
 }
 

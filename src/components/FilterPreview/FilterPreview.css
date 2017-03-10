@@ -1,0 +1,28 @@
+@import '../../variables.css';
+
+.FilterPreview {
+  padding: 0 calc(var(--baseline) * 0.5);
+
+  font-size: 0.750rem;
+  font-weight: 600;
+  line-height: calc(var(--baseline) * 2);
+
+  color: color(var(--color__greyD) blackness(+5%));
+
+  background: white;
+  border: 1px solid transparent;
+  border-radius: calc(var(--baseline) / 4);
+  border-color: var(--color__greyL);
+  background: white;
+  box-shadow: 0 0 0 0 var(--color__blue);
+
+  cursor: pointer;
+
+  transition-property: box-shadow;
+  transition-duration: 0.1s;
+
+  &:hover {
+    background: white;
+    box-shadow: 0 0 3px 0 var(--color__blue);
+  }
+}
