@@ -1,0 +1,74 @@
+@import '../../variables.css';
+
+.Slider {
+  display: block;
+  height: calc(var(--baseline) * 2);
+  margin: 0 calc(var(--baseline) * 3.5);
+
+  &__bar {
+    height: calc(var(--baseline) / 4);
+    background: var(--color__greyL);
+    border-radius: calc(var(--baseline) * 1);
+  }
+}
+
+.S-handle {
+  position: relative;
+  cursor: pointer;
+
+  &__counter {
+    position: absolute;
+    z-index: 1;
+    width: calc(var(--baseline) * 3.5);
+    top: calc(var(--baseline) / 2);
+
+    font-size: 0.750rem;
+    line-height: calc(var(--baseline) * 1.5);
+
+    color: white;
+    text-align: center;
+
+    background:var(--color__greyDD);
+
+    &:before {
+      position: absolute;
+      top: -calc(var(--baseline) * 0.5);
+      content: '';
+      display: block;
+
+      width: 0;
+      height: 0;
+
+      border-width: calc(var(--baseline) * 0.5);
+      border-style: solid;
+      border-color: var(--color__greyDD)
+                    transparent
+                    transparent
+                    transparent;
+    }
+  }
+    &__counter--low {
+      right: 0;
+      border-radius:  calc(var(--baseline) / 4)
+                      0
+                      calc(var(--baseline) / 4)
+                      calc(var(--baseline) / 4);
+
+      &:before {
+        right: -calc(var(--baseline) * 0.5);
+        transform: rotateZ(-45deg);
+      }
+    }
+    &__counter--high {
+      left: 0;
+      border-radius:  0
+                      calc(var(--baseline) / 4)
+                      calc(var(--baseline) / 4)
+                      calc(var(--baseline) / 4);
+
+      &:before {
+        left: -calc(var(--baseline) * 0.5);
+        transform: rotateZ(45deg);
+      }
+    }
+}

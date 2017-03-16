@@ -23,5 +23,5 @@
   }
 }
   .SearchQuery--selected {
-    background: color(var(--color__teal) lightness(+16%));
+    background: color(var(--color__teal) lightness(+10%));
   }

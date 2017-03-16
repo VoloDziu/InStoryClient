@@ -7,21 +7,17 @@ import {DragSource} from 'react-dnd'
 import constants from '../../constants'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Checkbox from '../Checkbox'
-import {toggleSelectImage, toggleCheckImage} from '../../store/uiActions'
+import {
+  toggleSelectImage,
+  toggleCheckImage,
+  setDraggingImages
+} from '../../store/uiActions'
 
 import './GalleryImage.css'
 
-const GalleryImageSource = {
-  beginDrag (props) {
-    console.log('beging dragging image', props)
-
-    return {}
-  }
-}
-
 const GalleryImage = ({
   connectDragSource,
-  isDragging,
+  isDraggingImages,
   img,
   userId,
   toggleSelectImage,
@@ -33,7 +29,7 @@ const GalleryImage = ({
     'GalleryImage--collected': img.isCollected,
     'GalleryImage--selected': isSelected,
     'GalleryImage--checked': isChecked,
-    'GalleryImage--dragged': isDragging
+    'GalleryImage--dragged': isDraggingImages && isChecked
   })
 
   return connectDragSource(
@@ -53,9 +49,9 @@ const GalleryImage = ({
             </div>
 
             <div
-              onClick={toggleCheckImage}
               className="GI-image__checkbox">
               <Checkbox
+                onClick={toggleCheckImage}
                 checked={isChecked} />
             </div>
           </div>
@@ -72,6 +68,7 @@ export default compose(
 
       return {
         userId: state.user.id,
+        isDraggingImages: state.ui.isDraggingImages,
         isSelected: state.ui.selectedImage ? state.ui.selectedImage._id === img._id : false,
         isChecked: state.ui.checkedImages.indexOf(img._id) !== -1
       }
@@ -85,12 +82,31 @@ export default compose(
         },
         toggleSelectImage: () => {
           dispatch(toggleSelectImage(img))
+        },
+        setDraggingImages: (value) => {
+          dispatch(setDraggingImages(value))
         }
       }
     }
   ),
-  DragSource(constants.IMAGE, GalleryImageSource, (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  }))
+  DragSource(
+    constants.IMAGE,
+    {
+      beginDrag (props) {
+        if (!props.isChecked) {
+          props.toggleCheckImage()
+        }
+        props.setDraggingImages(true)
+        return {}
+      },
+      endDrag (props) {
+        props.setDraggingImages(false)
+        return {}
+      }
+    },
+    (connect, monitor) => ({
+      connectDragSource: connect.dragSource(),
+      connectDragPreview: connect.dragPreview()
+    }
+  ))
 )(GalleryImage)

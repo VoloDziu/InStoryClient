@@ -3,25 +3,30 @@ import moment from 'moment'
 import {connect} from 'react-redux'
 
 import constants from '../../constants'
-import {Flex, FlexItem} from '../../Layouts/Flex'
 import GalleryRow from '../GalleryRow'
+import GalleryHeader from '../GalleryHeader'
 import Timestamp from '../Timestamp'
-import Button from '../../UI/Button'
-import {resetCheckedImages} from '../../store/uiActions'
-import {deleteImages} from '../../store/historyActions'
+import Box from '../../Layouts/Box'
 
 import './ImageGallery.css'
 
 const format = (timestamp) => moment(timestamp).format(constants.TIME_FORMAT)
 
+const intersect = (arr1, arr2) => {
+  return arr1.filter(item => arr2.indexOf(item) !== -1)
+}
+
 const ImageGallery = ({
   userId,
   images,
-  selectedQueries,
+  checkedQueries,
   selectedDate,
   checkedImages,
   resetCheckedImages,
-  deleteImages
+  deleteImages,
+  heightRange,
+  widthRange,
+  checkedCollections
 }) => {
   const elements = []
 
@@ -33,8 +38,11 @@ const ImageGallery = ({
     let image = images[i]
 
     if (
+      (checkedCollections.length === 0 || intersect(checkedCollections, image.collectionIds).length !== 0) &&
       (!selectedDate || format(image.timestamp) === selectedDate) &&
-      (selectedQueries.length === 0 || selectedQueries.indexOf(image.queryId) !== -1)
+      (checkedQueries.length === 0 || checkedQueries.indexOf(image.queryId) !== -1) &&
+      (!image.height || (image.height >= heightRange[0] && image.height <= heightRange[1])) &&
+      (!image.width || (image.width >= widthRange[0] && image.width <= widthRange[1]))
     ) {
       if (!lastImage || format(lastImage.timestamp) !== format(image.timestamp)) {
         elements.push(
@@ -43,9 +51,12 @@ const ImageGallery = ({
             images={imageRow} />
         )
         elements.push(
-          <Timestamp
+          <Box
             key={image.timestamp}
-            date={format(image.timestamp)} />
+            l={2.5} r={2.5} b={0}>
+            <Timestamp
+              date={format(image.timestamp)} />
+          </Box>
         )
 
         imageRow = []
@@ -78,60 +89,31 @@ const ImageGallery = ({
 
   return (
     <div className="ImageGallery">
+      <div className="ImageGallery__header">
+        <GalleryHeader />
+      </div>
+
       <div className="ImageGallery__body">
         {elements}
       </div>
-
-      {checkedImages.length
-        ? <div className="ImageGallery__actions">
-          <Flex>
-            <FlexItem
-              main>
-              {checkedImages.length} selected
-            </FlexItem>
-
-            <FlexItem
-              spacing={1}>
-              <Button
-                onClick={resetCheckedImages}
-                link>
-                clear
-              </Button>
-            </FlexItem>
-
-            <FlexItem
-              spacing={1}>
-              <Button
-                onClick={() => deleteImages(userId, checkedImages)}
-                color="red"
-                link>
-                delete
-              </Button>
-            </FlexItem>
-          </Flex>
-        </div>
-        : ''
-      }
     </div>
   )
 }
 
 export default connect(
   state => ({
-    userId: state.user.id,
     images: state.history.history
       ? state.history.history.images
       : [],
-    selectedQueries: state.ui.selectedQueries,
+    checkedQueries: state.ui.checkedQueries,
     selectedDate: state.ui.selectedDate,
-    checkedImages: state.ui.checkedImages
-  }),
-  dispatch => ({
-    deleteImages: (userId, images) => {
-      dispatch(deleteImages(userId, images))
-    },
-    resetCheckedImages: () => {
-      dispatch(resetCheckedImages())
-    }
+    checkedImages: state.ui.checkedImages,
+    checkedCollections: state.ui.checkedCollections,
+    heightRange: state.ui.heightRange.length
+      ? state.ui.heightRange
+      : [0, 10000],
+    widthRange: state.ui.widthRange.length
+      ? state.ui.widthRange
+      : [0, 10000]
   })
 )(ImageGallery)

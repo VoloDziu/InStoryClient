@@ -6,6 +6,8 @@
   width: calc(var(--baseline) * 2);
   height: calc(var(--baseline) * 2);
 
+  cursor: pointer;
+
   &:after {
     display: block;
     width: calc(var(--baseline) * 1.5);

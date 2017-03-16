@@ -1,0 +1,50 @@
+@import '../../variables.css';
+
+.Collection {
+  padding: calc(var(--baseline) / 2);
+
+  &__body {
+    cursor: pointer;
+  }
+
+  &__name {
+    padding: calc(var(--baseline) / 2) 0;
+    line-height: calc(var(--baseline) * 2);
+
+    color: var(--color__greyD);
+  }
+
+  &__info {
+    font-size: 0.750rem;
+    line-height: calc(var(--baseline) * 1);
+
+    color: var(--color__greyL);
+  }
+
+  &__actions {
+    display: none;
+  }
+}
+  .Collection--interactive {
+    &:hover {
+      background: color(var(--color__teal) lightness(+16%));
+
+      & .Collection__info {
+        display: none;
+      }
+
+      & .Collection__actions {
+        display: block;
+      }
+    }
+  }
+  .Collection--selected {
+    background: color(var(--color__teal) lightness(+10%));
+
+    &:hover {
+      background: color(var(--color__teal) lightness(+10%));
+    }
+  }
+  .Collection--is-over {
+    background: color(var(--color__green) alpha(-75%));
+  }

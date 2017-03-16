@@ -1,0 +1,20 @@
+@import '../../variables.css';
+
+.ResolutionPicker {
+  padding:  calc(var(--baseline) * 1)
+            calc(var(--baseline) * 1.5);
+
+  &__header {
+    font-size: 0.875rem;
+
+    font-weight: 600;
+
+    color: var(--color__greyD);
+  }
+
+  &__info {
+    font-size: 0.750rem;
+
+    color: var(--color__greyM);
+  }
+}

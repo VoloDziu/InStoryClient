@@ -1,10 +1,17 @@
-import {REQUEST_HISTORY, RECEIVE_HISTORY, UPDATE_HISTORY} from './historyActions'
+import {
+  REQUEST_HISTORY,
+  RECEIVE_HISTORY,
+  UPDATE_HISTORY,
+  UPDATE_IMAGE_DIMENSIONS
+} from './historyActions'
 
 const historyReducer = (
   state = {
     history: null,
     isFetching: false,
-    isUpdating: false
+    isUpdating: false,
+    maxWidth: 0,
+    maxHeight: 0
   },
   action
 ) => {
@@ -13,24 +20,16 @@ const historyReducer = (
       return Object.assign({}, state, {
         isFetching: true
       })
+    case UPDATE_IMAGE_DIMENSIONS:
+      return Object.assign({}, state, {
+        maxHeight: action.maxHeight,
+        maxWidth: action.maxWidth
+      })
     case RECEIVE_HISTORY:
-      const history = Object.assign({}, action.history)
-
-      const queryIdMap = {}
-
-      for (let query of history.queries) {
-        query.imagesCount = 0
-        queryIdMap[query._id] = query
-      }
-
-      for (let image of history.images) {
-        queryIdMap[image.queryId].imagesCount ++
-      }
-
       return Object.assign({}, state, {
         isFetching: false,
         isUpdating: false,
-        history
+        history: action.history
       })
     case UPDATE_HISTORY:
       return Object.assign({}, state, {

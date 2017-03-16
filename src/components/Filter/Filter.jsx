@@ -2,35 +2,26 @@ import React from 'react'
 import {connect} from 'react-redux'
 import classnames from 'classnames'
 
-import FilterHeader from '../FilterHeader'
-
 import './Filter.css'
 
 const Filter = ({
-  value,
-  title,
+  header,
   body,
-  isOpened,
-  filters,
-  showFilters
+  isOpen
 }) => {
   return (
     <div
       className={classnames(
         'Filter',
         {
-          'Filter--opened': isOpened
+          'Filter--open': isOpen
         }
       )}>
       <div className="Filter__header">
-        <FilterHeader
-          value={value}
-          title={title}
-          filters={filters}
-          showFilters={showFilters} />
+        {header}
       </div>
 
-      {isOpened
+      {isOpen
         ? <div className="Filter__body">
           {body}
         </div>
@@ -42,6 +33,6 @@ const Filter = ({
 
 export default connect(
   (state, ownProps) => ({
-    isOpened: state.ui.selectedFilter === ownProps.value
+    isOpen: state.ui.selectedFilter === ownProps.value
   })
 )(Filter)

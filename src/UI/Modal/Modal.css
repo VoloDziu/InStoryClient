@@ -1,0 +1,56 @@
+@import '../../variables.css';
+
+.Modal {
+  position: fixed;
+  z-index: 100;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+
+  background: color(var(--color__darkBlue) alpha(-50%));
+}
+
+.ModalWindow {
+  width: calc(var(--baseline) * 40);
+  border: 1px solid var(--color__greyM);
+  border-radius: calc(var(--baseline) / 3);
+  box-shadow: 0 0 10px color(var(--color__darkBlue) alpha(-50%));
+
+  overflow: hidden;
+
+  &__body {
+    background: white;
+  }
+}
+
+.MW-header {
+  padding:  calc(var(--baseline) * 0.75)
+            calc(var(--baseline) * 1)
+            calc(var(--baseline) * 0.75)
+            calc(var(--baseline) * 1.5);
+
+  background: color(var(--color__greyL) lightness(+20%));
+  border-bottom: 1px solid var(--color__greyM);
+
+  &__title {
+    color: var(--color__greyD);
+
+    font-size: 0.750rem;
+    font-weight: 600;
+  }
+
+  &__close {
+    display: block;
+    height: calc(var(--baseline) * 2);
+    width: calc(var(--baseline) * 2);
+
+    font-size: 1.5rem;
+    line-height: calc(var(--baseline) * 2);
+
+    text-align: center;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+  }
+}

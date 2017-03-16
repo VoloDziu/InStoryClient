@@ -1,6 +1,9 @@
 @import '../../variables.css';
 
 .FilterHeader {
+  padding:  0
+            calc(var(--baseline) * 1.5);
+
   height: calc(var(--baseline) * 4);
   display: flex;
   align-items: center;
@@ -14,13 +17,23 @@
   box-shadow: 0 0 10px 0px color(var(--color__darkBlue) blackness(+25%) alpha(-50%));
 
   &__title {
-    padding:  0
-              calc(var(--baseline) * 1.5);
-
     font-size: 0.875rem;
     font-weight: 600;
     line-height: calc(var(--baseline) * 4);
+  }
+    &__title--small {
+      font-size: 0.750rem;
+      font-weight: 400;
+      line-height: 1rem;
 
-    cursor: pointer;
+      color: color(white alpha(-50%));
+    }
+
+  &__selection {
+    font-size: 0.87550rem;
+    line-height: 1rem;
   }
 }
+  .FilterHeader--collapsed {
+    cursor: pointer;
+  }

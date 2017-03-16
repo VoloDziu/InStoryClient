@@ -1,15 +1,15 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import {toggleSelectDate, resetSelectedQueries} from '../../store/uiActions'
+import {toggleSelectDate, resetcheckedQueries} from '../../store/uiActions'
 import {ListInline, ListInlineItem} from '../../Layouts/ListInline'
 import FilterPreview from '../FilterPreview'
 
 const HistoryFilterPreview = ({
   selectedDate,
   toggleSelectDate,
-  selectedQueries,
-  resetSelectedQueries
+  checkedQueries,
+  resetcheckedQueries
 }) => {
   return (
     <ListInline>
@@ -22,11 +22,11 @@ const HistoryFilterPreview = ({
         : ''
       }
 
-      {selectedQueries.length
+      {checkedQueries.length
         ? <ListInlineItem>
           <FilterPreview
-            name={`${selectedQueries.length} queries`}
-            removeCallback={() => resetSelectedQueries()} />
+            name={`${checkedQueries.length} queries`}
+            removeCallback={() => resetcheckedQueries()} />
         </ListInlineItem>
         : ''
       }
@@ -37,14 +37,14 @@ const HistoryFilterPreview = ({
 export default connect(
   state => ({
     selectedDate: state.ui.selectedDate,
-    selectedQueries: state.ui.selectedQueries
+    checkedQueries: state.ui.checkedQueries
   }),
   dispatch => ({
     toggleSelectDate: (date) => {
       dispatch(toggleSelectDate(date))
     },
-    resetSelectedQueries: () => {
-      dispatch(resetSelectedQueries())
+    resetcheckedQueries: () => {
+      dispatch(resetcheckedQueries())
     }
   })
 )(HistoryFilterPreview)

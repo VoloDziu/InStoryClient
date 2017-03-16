@@ -16,7 +16,7 @@
     overflow: auto;
   }
 }
-  .Filter--opened {
+  .Filter--open {
     flex: 1;
 
     & .Filter__header {

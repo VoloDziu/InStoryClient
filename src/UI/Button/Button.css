@@ -98,6 +98,21 @@
     text-decoration: none;
   }
 }
+  .ui-link--white {
+    color: white;
+
+    &:hover {
+      color: color(white lightness(+10%));
+    }
+
+    &:active {
+      color: color(white lightness(-10%));
+    }
+
+    &:disabled {
+      color: color(white lightness(+25%));
+    }
+  }
   .ui-link--blue {
     color: var(--color__blue);
 

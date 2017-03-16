@@ -5,25 +5,27 @@ import moment from 'moment'
 
 import constants from '../../constants'
 import {deleteQueries} from '../../store/historyActions'
-import {toggleSelectDate, resetSelectedQueries} from '../../store/uiActions'
+import {toggleSelectDate, resetcheckedQueries} from '../../store/uiActions'
 import SearchHistory from '../SearchHistory'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
+import Filter from '../Filter'
+import FilterHeader from '../FilterHeader'
 
 import './DatePicker.css'
 import './HistoryFilter.css'
 
 const HistoryFilter = ({
   selectedDate,
-  selectedQueries,
+  checkedQueries,
   highlightedDates,
   toggleSelectDate,
   isUpdating,
   deleteQueries,
   userId,
-  resetSelectedQueries
+  resetcheckedQueries
 }) => {
-  return (
+  const body = (
     <div className="HistoryFilter">
       <div className="HistoryFilter__calendar">
         <DayPicker
@@ -38,46 +40,45 @@ const HistoryFilter = ({
       <div className="HistoryFilter__history">
         <SearchHistory />
       </div>
-
-      {selectedQueries.length
-        ? <div className="HistoryFilter__actions">
-          <Flex>
-            <FlexItem
-              main>
-              {selectedQueries.length} selected
-            </FlexItem>
-
-            <FlexItem
-              spacing={1}>
-              <Flex>
-                <FlexItem>
-                  <Button
-                    disabled={isUpdating}
-                    onClick={resetSelectedQueries}
-                    link>
-                    clear
-                  </Button>
-                </FlexItem>
-
-                <FlexItem
-                  spacing={1}>
-                  <Button
-                    color="red"
-                    disabled={isUpdating}
-                    onClick={() => {
-                      deleteQueries(userId, selectedQueries)
-                    }}
-                    link>
-                    delete
-                  </Button>
-                </FlexItem>
-              </Flex>
-            </FlexItem>
-          </Flex>
-        </div>
-        : ''
-      }
     </div>
+  )
+
+  return (
+    <Filter
+      value="history"
+      header={
+        <FilterHeader
+          value="history"
+          title="Search History"
+          selection={checkedQueries}
+          selectionActions={
+            <Flex>
+              <FlexItem>
+                <Button
+                  color="white"
+                  disabled={isUpdating}
+                  onClick={resetcheckedQueries}
+                  link>
+                  clear
+                </Button>
+              </FlexItem>
+
+              <FlexItem
+                spacing={1}>
+                <Button
+                  color="red"
+                  disabled={isUpdating}
+                  onClick={() => {
+                    deleteQueries(userId, checkedQueries)
+                  }}
+                  link>
+                  delete
+                </Button>
+              </FlexItem>
+            </Flex>
+          } />
+      }
+      body={body} />
   )
 }
 
@@ -98,8 +99,9 @@ export default connect(
     }
 
     return {
+      isUpdating: state.history.isUpdating,
       userId: state.user.id,
-      selectedQueries: state.ui.selectedQueries,
+      checkedQueries: state.ui.checkedQueries,
       selectedDate: state.ui.selectedDate
         ? moment(state.ui.selectedDate, constants.TIME_FORMAT).toDate()
         : null,
@@ -113,8 +115,8 @@ export default connect(
     deleteQueries: (userId, queryIds) => {
       dispatch(deleteQueries(userId, queryIds))
     },
-    resetSelectedQueries: () => {
-      dispatch(resetSelectedQueries())
+    resetcheckedQueries: () => {
+      dispatch(resetcheckedQueries())
     }
   })
 )(HistoryFilter)

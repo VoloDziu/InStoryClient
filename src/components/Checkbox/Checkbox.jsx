@@ -4,10 +4,12 @@ import classnames from 'classnames'
 import './Checkbox.css'
 
 const Checkbox = ({
-  checked
+  checked,
+  ...props
 }) => {
   return (
     <div
+      {...props}
       className={classnames(
         'Checkbox',
         {

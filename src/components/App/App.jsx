@@ -9,8 +9,9 @@ import {fetchHistory} from '../../store/historyActions'
 import Loading from '../Loading'
 import Filter from '../Filter'
 import HistoryFilter from '../HistoryFilter'
-import HistoryFilterPreview from '../HistoryFilterPreview'
+import ImageFilter from '../ImageFilter'
 import ImageGallery from '../ImageGallery'
+import CollectionFilter from '../CollectionFilter'
 
 import './App.css'
 
@@ -22,42 +23,24 @@ class App extends React.Component {
   }
 
   render () {
-    const {isFetching, showHistoryFilters} = this.props
+    const {isFetching} = this.props
 
     if (isFetching) {
       return <Loading />
     } else {
-      const body = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-
       return (
         <div className="App">
           <div className="App__sidebar">
+            <HistoryFilter />
+            <CollectionFilter />
             <Filter
-              title="Search History"
-              value="history"
+              value="image"
+              header={
+                <div>Image filter header</div>
+              }
               body={
-                <HistoryFilter />
-              }
-              filters={
-                <HistoryFilterPreview />
-              }
-              showFilters={showHistoryFilters}
-              />
-            <Filter
-              title="Collections"
-              value="collection"
-              body={body}
-              filters={null} />
-            <Filter
-              title="Resolution"
-              value="resolution"
-              body={body}
-              filters={null} />
-            <Filter
-              title="Color"
-              value="color"
-              body={body}
-              filters={null} />
+                <ImageFilter />
+              } />
           </div>
 
           <div className="App__body">
@@ -75,7 +58,7 @@ export default compose(
     state => ({
       isFetching: state.history.isFetching,
       userId: state.user.id,
-      showHistoryFilters: state.ui.selectedDate !== null || state.ui.selectedQueries.length > 0
+      showHistoryFilters: state.ui.selectedDate !== null || state.ui.checkedQueries.length > 0
     }),
     (dispatch, ownProps) => ({
       fetchHistory: (userId) => {

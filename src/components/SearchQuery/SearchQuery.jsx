@@ -55,7 +55,7 @@ export default connect(
     const {query} = ownProps
 
     return {
-      isSelected: state.ui.selectedQueries.indexOf(query._id) !== -1
+      isSelected: state.ui.checkedQueries.indexOf(query._id) !== -1
     }
   },
   (dispatch, ownProps) => {
