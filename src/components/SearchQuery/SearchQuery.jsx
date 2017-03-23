@@ -1,26 +1,43 @@
+
 import React from 'react'
 import {connect} from 'react-redux'
-import moment from 'moment'
 import classnames from 'classnames'
 
-import {toggleSelectQuery} from '../../store/uiActions'
-import {Flex, FlexItem} from '../../Layouts/Flex'
+import {
+  toggleCheckQuery,
+  uncheckImages,
+  uncheckOtherImages,
+  resetSelectedImage
+} from '../../store/filterActions'
+import {
+  Flex,
+  FlexItem
+} from '../../Layouts/Flex'
 import Checkbox from '../Checkbox'
 
 import './SearchQuery.css'
 
 const SearchQuery = ({
   query,
+  matchingImages,
+  available,
   isSelected,
-  toggleSelectQuery
+  checkedQueries,
+  toggleCheckQuery
 }) => {
   return (
     <div
-      onClick={toggleSelectQuery}
+      onClick={() => {
+        if (!available) {
+          return
+        }
+        toggleCheckQuery(query, isSelected, checkedQueries)
+      }}
       className={classnames(
         'SearchQuery',
         {
-          'SearchQuery--selected': isSelected
+          'SearchQuery--selected': isSelected,
+          'SearchQuery--unavailable': !available
         }
       )}>
       <Flex>
@@ -42,7 +59,7 @@ const SearchQuery = ({
           spacing={1}>
           <div
             className="SearchQuery__info">
-            {query.imagesCount} images
+            {matchingImages.length} images
           </div>
         </FlexItem>
       </Flex>
@@ -54,17 +71,30 @@ export default connect(
   (state, ownProps) => {
     const {query} = ownProps
 
-    return {
-      isSelected: state.ui.checkedQueries.indexOf(query._id) !== -1
+    let matchingImages = query.images
+    if (state.selected.collectionId) {
+      matchingImages = matchingImages.filter(i => i.collectionIds.indexOf(state.selected.collectionId) !== -1)
     }
-  },
-  (dispatch, ownProps) => {
-    const {query} = ownProps
 
     return {
-      toggleSelectQuery: () => {
-        dispatch(toggleSelectQuery(query))
-      }
+      isSelected: state.checked.queries[query._id],
+      checkedQueries: state.history.queries.filter(q => state.checked.queries[q._id]),
+      matchingImages
     }
-  }
+  },
+  dispatch => ({
+    toggleCheckQuery: (query, isSelected, checkedQueries) => {
+      dispatch(resetSelectedImage())
+
+      if (checkedQueries.length > 0) {
+        if (isSelected) {
+          dispatch(uncheckImages(query.images.map(i => i._id)))
+        }
+      } else {
+        dispatch(uncheckOtherImages(query.images.map(i => i._id)))
+      }
+
+      dispatch(toggleCheckQuery(query._id))
+    }
+  })
 )(SearchQuery)

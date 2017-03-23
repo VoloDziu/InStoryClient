@@ -1,28 +1,58 @@
 @import '../../variables.css';
 
 .FilterPreview {
-  padding: 0 calc(var(--baseline) * 0.5);
+  position: relative;
+  z-index: 0;
+  padding: 0 calc(var(--baseline) / 4);
+  margin-bottom: -1px;
 
-  font-size: 0.750rem;
-  font-weight: 600;
-  line-height: calc(var(--baseline) * 2);
+  border-bottom: 1px solid var(--color__red);
 
-  color: color(var(--color__greyD) blackness(+5%));
+  &__action {
+    display: block;
+    opacity: 0;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
 
-  background: white;
-  border: 1px solid transparent;
-  border-radius: calc(var(--baseline) / 4);
-  border-color: var(--color__greyL);
-  background: white;
-  box-shadow: 0 0 0 0 var(--color__blue);
+    font-size: 0.750rem;
+    font-weight: 600;
+    line-height: calc(var(--baseline) * 1.5);
 
-  cursor: pointer;
+    color: var(--color__red);
+    text-align: center;
 
-  transition-property: box-shadow;
-  transition-duration: 0.1s;
+    border: none;
+    background: white;
+
+    cursor: pointer;
+  }
 
   &:hover {
-    background: white;
-    box-shadow: 0 0 3px 0 var(--color__blue);
+    & .FilterPreview__action {
+      opacity: 1;
+    }
+  }
+}
+
+.FP-body {
+  /* ... */
+
+  &__name {
+    font-size: 0.750rem;
+    font-weight: 600;
+    line-height: calc(var(--baseline) * 1.5);
+
+    color: color(var(--color__greyD) blackness(+5%));
+  }
+
+  &__type {
+    font-size: 0.750rem;
+    font-weight: 400;
+    line-height: calc(var(--baseline) * 1.5);
+
+    color: color(var(--color__greyM));
   }
 }

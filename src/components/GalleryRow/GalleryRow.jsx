@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import constants from '../../constants'
+import {IMAGES_PER_ROW} from '../../constants'
 import Box from '../../Layouts/Box'
 import {Grid, GridItem} from '../../Layouts/Grid'
 import GalleryImage from '../GalleryImage'
@@ -22,7 +22,7 @@ const GalleryRow = ({
             <GridItem
               key={j}
               span={1}
-              outOf={constants.IMAGES_PER_ROW}
+              outOf={IMAGES_PER_ROW}
               gutter={0}
               gutterBottom={0}>
               <GalleryImage
@@ -32,8 +32,8 @@ const GalleryRow = ({
         </Grid>
       </Box>
 
-      {selectedImage && images.map(i => i._id).indexOf(selectedImage._id) !== -1
-        ? <SelectedImageView />
+      {selectedImage
+        ? <SelectedImageView image={selectedImage} />
         : ''
       }
     </div>
@@ -41,7 +41,7 @@ const GalleryRow = ({
 }
 
 export default connect(
-  state => ({
-    selectedImage: state.ui.selectedImage
+  (state, ownProps) => ({
+    selectedImage: ownProps.images.find(i => i._id === state.selected.imageId)
   })
 )(GalleryRow)

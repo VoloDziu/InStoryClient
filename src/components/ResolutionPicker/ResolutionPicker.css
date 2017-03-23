@@ -2,6 +2,8 @@
 
 .ResolutionPicker {
   padding:  calc(var(--baseline) * 1)
+            calc(var(--baseline) * 1.5)
+            0
             calc(var(--baseline) * 1.5);
 
   &__header {

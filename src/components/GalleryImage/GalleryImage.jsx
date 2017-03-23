@@ -4,61 +4,106 @@ import {connect} from 'react-redux'
 import classnames from 'classnames'
 import {DragSource} from 'react-dnd'
 
-import constants from '../../constants'
-import {Flex, FlexItem} from '../../Layouts/Flex'
+import {IMAGE} from '../../constants'
 import Checkbox from '../Checkbox'
 import {
-  toggleSelectImage,
-  toggleCheckImage,
   setDraggingImages
 } from '../../store/uiActions'
+import {
+  toggleSelectImage,
+  toggleCheckImage
+} from '../../store/filterActions'
 
 import './GalleryImage.css'
 
-const GalleryImage = ({
-  connectDragSource,
-  isDraggingImages,
-  img,
-  userId,
-  toggleSelectImage,
-  toggleCheckImage,
-  isSelected,
-  isChecked
-}) => {
-  const classes = classnames('GalleryImage', {
-    'GalleryImage--collected': img.isCollected,
-    'GalleryImage--selected': isSelected,
-    'GalleryImage--checked': isChecked,
-    'GalleryImage--dragged': isDraggingImages && isChecked
-  })
+class GalleryImage extends React.Component {
+  constructor (props) {
+    super(props)
 
-  return connectDragSource(
-    <div
-      className={classes}>
-      <Flex
-        alignItems="center"
-        justifyContent="center">
-        <FlexItem>
-          <div
-            className="GI-image">
-            <div
-              onClick={toggleSelectImage}
-              className="GI-image__thumb">
+    this.state = {
+      // imageVisible: false
+      imageVisible: true
+    }
+  }
+
+  // componentDidMount () {
+  //   const elementPosition = this._element.getBoundingClientRect()
+  //
+  //   if (elementPosition.top >= 0 && elementPosition.top <= window.innerHeight) {
+  //     this.setState({
+  //       imageVisible: true
+  //     })
+  //   } else {
+  //     this.setState({
+  //       imageVisible: false
+  //     })
+  //   }
+  // }
+
+  // componentWillReceiveProps (newProps) {
+  //   const {scrollTop: newScrollTop} = newProps
+  //   const {scrollTop} = this.props
+  //
+  //   if (newScrollTop !== scrollTop) {
+  //     const elementPosition = this._element.getBoundingClientRect()
+  //     if (elementPosition.top >= -200 && elementPosition.top <= window.innerHeight + 200) {
+  //       this.setState({
+  //         imageVisible: true
+  //       })
+  //     } else {
+  //       this.setState({
+  //         imageVisible: false
+  //       })
+  //     }
+  //   }
+  // }
+
+  render () {
+    const {
+      connectDragSource,
+      isDraggingImages,
+      img,
+      toggleSelectImage,
+      toggleCheckImage,
+      isSelected,
+      isChecked
+    } = this.props
+
+    const classes = classnames('GalleryImage', {
+      'GalleryImage--collected': img.isCollected,
+      'GalleryImage--selected': isSelected,
+      'GalleryImage--checked': isChecked,
+      'GalleryImage--dragged': isDraggingImages && isChecked
+    })
+
+    return connectDragSource(
+      <div
+        ref={el => { this._element = el }}
+        className={classes}>
+        <div
+          className="GalleryImage__body">
+          {this.state.imageVisible
+            ? <div
+              className="GI-image">
               <img
+                onClick={toggleSelectImage}
+                className="GI-image__thumb"
                 src={img.thumbSrc} />
-            </div>
 
-            <div
-              className="GI-image__checkbox">
-              <Checkbox
-                onClick={toggleCheckImage}
-                checked={isChecked} />
+              <div
+                className="GI-image__checkbox">
+                <Checkbox
+                  onClick={toggleCheckImage}
+                  checked={isChecked} />
+              </div>
             </div>
-          </div>
-        </FlexItem>
-      </Flex>
-    </div>
-  )
+            : <div
+              className="GI-dummy" />
+          }
+        </div>
+      </div>
+    )
+  }
 }
 
 export default compose(
@@ -67,10 +112,10 @@ export default compose(
       const {img} = ownProps
 
       return {
-        userId: state.user.id,
+        scrollTop: state.ui.scrollTop,
         isDraggingImages: state.ui.isDraggingImages,
-        isSelected: state.ui.selectedImage ? state.ui.selectedImage._id === img._id : false,
-        isChecked: state.ui.checkedImages.indexOf(img._id) !== -1
+        isSelected: state.selected.imageId === img._id,
+        isChecked: state.checked.images[img._id]
       }
     },
     (dispatch, ownProps) => {
@@ -78,10 +123,10 @@ export default compose(
 
       return {
         toggleCheckImage: () => {
-          dispatch(toggleCheckImage(img))
+          dispatch(toggleCheckImage(img._id))
         },
         toggleSelectImage: () => {
-          dispatch(toggleSelectImage(img))
+          dispatch(toggleSelectImage(img._id))
         },
         setDraggingImages: (value) => {
           dispatch(setDraggingImages(value))
@@ -90,7 +135,7 @@ export default compose(
     }
   ),
   DragSource(
-    constants.IMAGE,
+    IMAGE,
     {
       beginDrag (props) {
         if (!props.isChecked) {

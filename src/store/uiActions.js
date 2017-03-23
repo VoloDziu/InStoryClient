@@ -1,3 +1,14 @@
+export const SET_SCROLL_TOP = 'SET_SCROLL_TOP'
+
+export const setScrollTop = (
+  value
+) => {
+  return {
+    type: SET_SCROLL_TOP,
+    value
+  }
+}
+
 export const SET_DRAGGING_IMAGES = 'SET_DRAGGING_IMAGES'
 
 export const setDraggingImages = (
@@ -114,26 +125,5 @@ export const setDragImage = (
   return {
     type: SET_DRAGGED_IMAGE,
     image
-  }
-}
-
-export const SET_HEIGHT = 'SET_HEIGHT'
-export const SET_WIDTH = 'SET_WIDTH'
-
-export const setHeight = (
-  range
-) => {
-  return {
-    type: SET_HEIGHT,
-    range
-  }
-}
-
-export const setWidth = (
-  range
-) => {
-  return {
-    type: SET_WIDTH,
-    range
   }
 }

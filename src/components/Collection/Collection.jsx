@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classnames from 'classnames'
 import {DropTarget} from 'react-dnd'
 
-import constants from '../../constants'
+import {IMAGE} from '../../constants'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
 import TextInput from '../../UI/TextInput'
@@ -14,7 +14,12 @@ import {
   updateCollection,
   addImagesToCollection
 } from '../../store/historyActions'
-import {toggleCheckCollection} from '../../store/uiActions'
+import {
+  toggleSelectCollection,
+  resetSelectedImage,
+  uncheckOtherImages,
+  uncheckAllImages
+} from '../../store/filterActions'
 
 import './Collection.css'
 
@@ -25,7 +30,6 @@ class Collection extends React.Component {
     this.startEditing = this.startEditing.bind(this)
     this.cancelEditing = this.cancelEditing.bind(this)
     this.saveEditing = this.saveEditing.bind(this)
-    this.deleteCollection = this.deleteCollection.bind(this)
 
     this.state = {
       newName: null,
@@ -72,12 +76,6 @@ class Collection extends React.Component {
     }
   }
 
-  deleteCollection () {
-    const {deleteCollection, userId, collection} = this.props
-
-    deleteCollection(userId, collection._id)
-  }
-
   changeName (value) {
     this.setState({
       error: null,
@@ -88,17 +86,19 @@ class Collection extends React.Component {
   render () {
     const {
       collection,
+      available,
       isUpdating,
       connectDropTarget,
       isOver,
-      toggleCheckCollection,
-      isChecked
+      toggleSelectCollection,
+      isSelected
     } = this.props
 
     const classes = classnames('Collection', {
-      'Collection--interactive': !this.state.isEditing,
+      'Collection--interactive': !this.state.isEditing && available,
       'Collection--is-over': isOver,
-      'Collection--selected': isChecked
+      'Collection--selected': isSelected,
+      'Collection--unavailable': !available
     })
 
     if (this.state.isEditing) {
@@ -108,8 +108,14 @@ class Collection extends React.Component {
           <Flex>
             <FlexItem>
               <Checkbox
-                onClick={toggleCheckCollection}
-                checked={isChecked} />
+                onClick={() => {
+                  if (!available) {
+                    return
+                  }
+
+                  toggleSelectCollection()
+                }}
+                checked={isSelected} />
             </FlexItem>
 
             <FlexItem
@@ -157,12 +163,18 @@ class Collection extends React.Component {
             <FlexItem
               main>
               <div
-                onClick={toggleCheckCollection}
+                onClick={() => {
+                  if (!available) {
+                    return
+                  }
+
+                  toggleSelectCollection()
+                }}
                 className="Collection__body">
                 <Flex>
                   <FlexItem>
                     <Checkbox
-                      checked={isChecked} />
+                      checked={isSelected} />
                   </FlexItem>
 
                   <FlexItem
@@ -190,7 +202,7 @@ class Collection extends React.Component {
                 </div>
 
                 <div className="Collection__info">
-                  {collection.imagesCount} images
+                  {collection.images.length} images
                 </div>
               </div>
             </FlexItem>
@@ -208,31 +220,37 @@ export default compose(
 
       return {
         userId: state.user.id,
-        checkedImages: state.ui.checkedImages,
+        checkedImages: Object.keys(state.checked.images),
         isUpdating: state.history.isUpdating,
-        isChecked: state.ui.checkedCollections.indexOf(collection._id) !== -1
+        isSelected: state.selected.collectionId === collection._id
       }
     },
     (dispatch, ownProps) => {
       const {collection} = ownProps
 
       return {
-        toggleCheckCollection: () => {
-          dispatch(toggleCheckCollection(collection))
+        toggleSelectCollection: (collections) => {
+          dispatch(resetSelectedImage())
+          dispatch(uncheckOtherImages(collection.images.map(i => i._id)))
+          dispatch(toggleSelectCollection(collection._id))
         },
         updateCollection: (userId, collectionId, collection, callback) => {
           dispatch(updateCollection(userId, collectionId, collection, callback))
         },
         addImagesToCollection: (userId, collectionId, imageIds) => {
-          dispatch(addImagesToCollection(userId, collectionId, imageIds))
+          dispatch(addImagesToCollection(userId, collectionId, imageIds, false, () => {
+            dispatch(resetSelectedImage())
+            dispatch(uncheckAllImages())
+          }))
         }
       }
     }
   ),
   DropTarget(
-    constants.IMAGE,
+    IMAGE,
     {
       drop (props, monitor) {
+        console.log(props.userId, props.collection._id, props.checkedImages)
         props.addImagesToCollection(props.userId, props.collection._id, props.checkedImages)
       }
     },

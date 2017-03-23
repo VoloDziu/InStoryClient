@@ -10,7 +10,7 @@ import './FilterHeader.css'
 const FilterHeader = ({
   isOpen = false,
   title = '',
-  selection = [],
+  selection = 0,
   selectionActions = '',
   commonActions = '',
   setFilter
@@ -20,7 +20,7 @@ const FilterHeader = ({
       <div
         className="FilterHeader">
         <Flex
-          alignItems={selection.length > 0
+          alignItems={selection > 0
             ? 'center'
             : 'flex-start'
           }>
@@ -30,7 +30,7 @@ const FilterHeader = ({
               className={classnames(
                 'FilterHeader__title',
                 {
-                  'FilterHeader__title--small': selection.length > 0
+                  'FilterHeader__title--small': selection > 0
                 }
               )}>
               {title}
@@ -38,13 +38,13 @@ const FilterHeader = ({
 
             <div
               className="FilterHeader__selection">
-              {selection.length} selected
+              {selection} selected
             </div>
           </FlexItem>
 
           <FlexItem
             alignSelf="center">
-            {selection.length > 0
+            {selection > 0
               ? selectionActions
               : commonActions
             }

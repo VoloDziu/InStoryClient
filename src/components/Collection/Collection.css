@@ -48,3 +48,22 @@
   .Collection--is-over {
     background: color(var(--color__green) alpha(-75%));
   }
+  .Collection--unavailable {
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+    }
+
+    & .Collection__body {
+      cursor: auto;
+    }
+
+    & .Collection__name {
+      color: color(var(--color__greyD) alpha(-50%));
+    }
+
+    & .Collection__info {
+      color: color(var(--color__greyL) alpha(-50%));
+    }
+  }

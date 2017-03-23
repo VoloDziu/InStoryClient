@@ -1,27 +1,20 @@
 import React from 'react'
-import {connect} from 'react-redux'
 
 import './selectedImageView.css'
 
 const SelectedImageView = ({
-  selectedImage
+  image
 }) => {
   return (
     <div className="selected-image-view">
       <a
-        href={selectedImage.url}
+        href={image.url}
         target="_blank"
         className="selected-image-view__img">
-        <img src={selectedImage.src} />
+        <img src={image.src} />
       </a>
     </div>
   )
 }
 
-export default connect(
-  state => {
-    return {
-      selectedImage: state.ui.selectedImage
-    }
-  }
-)(SelectedImageView)
+export default SelectedImageView

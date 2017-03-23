@@ -1,7 +1,10 @@
 import React from 'react'
 import moment from 'moment'
 
-import constants from '../../constants'
+import {
+  TIME_FORMAT,
+  toDay
+} from '../../constants'
 
 import './Timestamp.css'
 
@@ -9,9 +12,9 @@ const Timestamp = ({
   date
 }) => {
   let time = date
-  if (date === moment().format(constants.TIME_FORMAT)) {
+  if (date === toDay(new Date())) {
     time = 'Today'
-  } else if (date === moment().subtract(1, 'days').format(constants.TIME_FORMAT)) {
+  } else if (date === moment().subtract(1, 'days').format(TIME_FORMAT)) {
     time = 'Yesterday'
   }
 

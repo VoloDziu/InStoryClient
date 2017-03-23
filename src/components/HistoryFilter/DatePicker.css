@@ -134,3 +134,12 @@
     background-color: var(--color__blue);
   }
 }
+
+.DayPicker-Day--unavailable {
+  color: var(--color__greyM);
+  background-color: color(var(--color__greyL) alpha(-75%));
+
+  &:hover {
+    background-color: color(var(--color__greyL) alpha(-75%));
+  }
+}

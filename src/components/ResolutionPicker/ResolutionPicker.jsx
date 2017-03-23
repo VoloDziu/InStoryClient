@@ -1,75 +1,146 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import {setWidth, setHeight} from '../../store/uiActions'
+import {setWidth, setHeight} from '../../store/filterActions'
 import {Flex} from '../../Layouts/Flex'
 import Box from '../../Layouts/Box'
+import {CHANGE_TIMEOUT_DELAY} from '../../constants'
 import Slider from '../Slider'
 
 import './ResolutionPicker.css'
 
-const ResolutionPicker = ({
-  heightRange,
-  maxHeight,
-  maxWidth,
-  widthRange,
-  setHeight,
-  setWidth
-}) => {
-  return (
-    <div className="ResolutionPicker">
-      <Box b={1}>
-        <Box b={1} t={1}>
+class ResolutionPicker extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.setWidth = this.setWidth.bind(this)
+    this.setHeight = this.setHeight.bind(this)
+
+    this.state = {
+      widthRange: this.props.widthRange,
+      heightRange: this.props.heightRange,
+      widthChangeTimeout: null,
+      heightChangeTimeout: null
+    }
+  }
+
+  componentWillReceiveProps (newProps) {
+    const {
+      heightRange: newHeightRange,
+      widthRange: newWidthRange
+    } = newProps
+
+    const {
+      heightRange,
+      widthRange
+    } = this.props
+
+    if (heightRange[0] !== newHeightRange[0] || heightRange[1] !== newHeightRange[1]) {
+      this.setState({
+        heightRange: newHeightRange
+      })
+    }
+
+    if (widthRange[0] !== newWidthRange[0] || widthRange[1] !== newWidthRange[1]) {
+      this.setState({
+        widthRange: newWidthRange
+      })
+    }
+  }
+
+  setWidth (range) {
+    clearTimeout(this.state.widthChangeTimeout)
+
+    const {setWidth} = this.props
+    const widthChangeTimeout = setTimeout(() => {
+      setWidth(range)
+    }, CHANGE_TIMEOUT_DELAY)
+
+    this.setState({
+      widthRange: range,
+      widthChangeTimeout
+    })
+  }
+
+  setHeight (range) {
+    clearTimeout(this.state.heightChangeTimeout)
+
+    const {setHeight} = this.props
+    const heightChangeTimeout = setTimeout(() => {
+      setHeight(range)
+    }, CHANGE_TIMEOUT_DELAY)
+
+    this.setState({
+      heightRange: range,
+      heightChangeTimeout
+    })
+  }
+
+  render () {
+    const {
+      maxHeight,
+      maxWidth
+    } = this.props
+
+    return (
+      <div className="ResolutionPicker">
+        <Box>
+          <Box>
+            <Flex
+              alignItems="center"
+              justifyContent="space-between">
+              <div
+                className="ResolutionPicker__header">
+                Height:
+              </div>
+
+              <div
+                className="ResolutionPicker__info">
+                {this.state.heightRange[0]}px – {this.state.heightRange[1]}px
+              </div>
+            </Flex>
+          </Box>
+
+          <Slider
+            onChange={range => this.setHeight(range)}
+            max={maxHeight}
+            range={this.state.heightRange} />
+        </Box>
+
+        <Box>
           <Flex
             alignItems="center"
             justifyContent="space-between">
             <div
               className="ResolutionPicker__header">
-              Height:
+              Width:
             </div>
 
             <div
               className="ResolutionPicker__info">
-              {heightRange[0]}px – {heightRange[1]}px
+              {this.state.widthRange[0]}px – {this.state.widthRange[1]}px
             </div>
           </Flex>
         </Box>
 
         <Slider
-          onChange={range => setHeight(range)}
-          max={maxHeight}
-          range={heightRange} />
-      </Box>
-
-      <Box b={1} t={1}>
-        <Flex
-          alignItems="center"
-          justifyContent="space-between">
-          <div
-            className="ResolutionPicker__header">
-            Width:
-          </div>
-
-          <div
-            className="ResolutionPicker__info">
-            {widthRange[0]}px – {widthRange[1]}px
-          </div>
-        </Flex>
-      </Box>
-
-      <Slider
-        onChange={range => setWidth(range)}
-        max={maxWidth}
-        range={widthRange} />
-    </div>
-  )
+          onChange={range => this.setWidth(range)}
+          max={maxWidth}
+          range={this.state.widthRange} />
+      </div>
+    )
+  }
 }
 
 export default connect(
   state => {
     return {
-      heightRange: state.ui.heightRange,
-      widthRange: state.ui.widthRange,
+      heightRange: state.image.heightRange.length === 0
+        ? [0, state.history.maxHeight]
+        : state.image.heightRange,
+      widthRange: state.image.widthRange.length === 0
+        ? [0, state.history.maxWidth]
+        : state.image.widthRange,
       maxWidth: state.history.maxWidth,
       maxHeight: state.history.maxHeight
     }

@@ -7,11 +7,10 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import {fetchHistory} from '../../store/historyActions'
 
 import Loading from '../Loading'
-import Filter from '../Filter'
 import HistoryFilter from '../HistoryFilter'
 import ImageFilter from '../ImageFilter'
-import ImageGallery from '../ImageGallery'
 import CollectionFilter from '../CollectionFilter'
+import ImageGallery from '../ImageGallery'
 
 import './App.css'
 
@@ -25,6 +24,16 @@ class App extends React.Component {
   render () {
     const {isFetching} = this.props
 
+    // <CollectionFilter />
+    // <Filter
+    //   value="image"
+    //   header={
+    //     <div>Image filter header</div>
+    //   }
+    //   body={
+    //     <ImageFilter />
+    //   } />
+
     if (isFetching) {
       return <Loading />
     } else {
@@ -33,14 +42,7 @@ class App extends React.Component {
           <div className="App__sidebar">
             <HistoryFilter />
             <CollectionFilter />
-            <Filter
-              value="image"
-              header={
-                <div>Image filter header</div>
-              }
-              body={
-                <ImageFilter />
-              } />
+            <ImageFilter />
           </div>
 
           <div className="App__body">

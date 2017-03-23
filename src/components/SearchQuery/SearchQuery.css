@@ -24,4 +24,18 @@
 }
   .SearchQuery--selected {
     background: color(var(--color__teal) lightness(+10%));
+
+    &:hover {
+      background: color(var(--color__teal) lightness(+10%));
+    }
+  }
+  .SearchQuery--unavailable {
+    color: var(--color__greyL);
+
+    background: white;
+    cursor: auto;
+
+    &:hover {
+      background: white;
+    }
   }

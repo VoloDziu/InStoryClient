@@ -1,32 +1,42 @@
 import React from 'react'
 
-import {ListInline, ListInlineItem} from '../../Layouts/ListInline'
-import Icon from '../../UI/Icon'
-
+import {Flex, FlexItem} from '../../Layouts/Flex'
 import './FilterPreview.css'
-import icon from './icon-close.svg'
 
 const FilterPreview = ({
+  type,
   name,
   removeCallback
 }) => {
   return (
     <div
-      onClick={removeCallback}
       className="FilterPreview">
-      <ListInline
-        alignItems="center"
-        n={1}>
-        <ListInlineItem n={1}>
-          {name}
-        </ListInlineItem>
+      <div
+        className="FP-body">
+        <Flex>
+          <FlexItem>
+            <div
+              className="FP-body__type">
+              {type}
+            </div>
+          </FlexItem>
 
-        <ListInlineItem n={1}>
-          <Icon
-            small
-            icon={icon} />
-        </ListInlineItem>
-      </ListInline>
+          <FlexItem
+            spacing={0.25}
+            main>
+            <div
+              className="FP-body__name">
+              {name}
+            </div>
+          </FlexItem>
+        </Flex>
+      </div>
+
+      <button
+        onClick={removeCallback}
+        className="FilterPreview__action">
+        remove
+      </button>
     </div>
   )
 }

@@ -4,33 +4,34 @@ import {connect} from 'react-redux'
 import Collection from '../Collection'
 import Filter from '../Filter'
 import FilterHeader from '../FilterHeader'
+import {FilterBody, FilterBodySection} from '../FilterBody'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
 
-import {resetCheckedCollections} from '../../store/uiActions'
-import {deleteCollections, createCollection} from '../../store/historyActions'
+import {
+  toggleSelectCollection,
+  resetSelectedCollection
+} from '../../store/filterActions'
+import {
+  deleteCollections,
+  createCollection
+} from '../../store/historyActions'
+import {
+  toDay
+} from '../../constants'
 
 import './CollectionFilter.css'
 
 const CollectionFilter = ({
   collections,
-  checkedCollections,
+  availableCollections,
+  selectedCollectionId,
   isUpdating,
   userId,
-  resetCheckedCollections,
-  deleteCollections,
+  toggleSelectCollection,
+  deleteCollection,
   createCollection
 }) => {
-  const body = (
-    <div className="CollectionFilter">
-      {collections.map((c, index) =>
-        <Collection
-          key={index}
-          collection={c} />
-      )}
-    </div>
-  )
-
   return (
     <Filter
       value="collections"
@@ -38,7 +39,7 @@ const CollectionFilter = ({
         <FilterHeader
           value="collections"
           title="Collections"
-          selection={checkedCollections}
+          selection={selectedCollectionId ? 1 : 0}
           selectionActions={
             <Flex>
               <FlexItem
@@ -47,7 +48,7 @@ const CollectionFilter = ({
                   color="red"
                   disabled={isUpdating}
                   onClick={() => {
-                    deleteCollections(userId, checkedCollections)
+                    deleteCollection(userId, selectedCollectionId)
                   }}
                   link>
                   delete
@@ -67,28 +68,85 @@ const CollectionFilter = ({
             </Button>
           } />
       }
-      body={body} />
+      body={
+        <FilterBody>
+          <FilterBodySection
+            main>
+            {collections.map((c, index) =>
+              <Collection
+                key={index}
+                collection={c}
+                available={availableCollections[c._id]} />
+            )}
+          </FilterBodySection>
+        </FilterBody>
+      } />
   )
 }
 
 export default connect(
-  state => ({
-    userId: state.user.id,
-    isUpdating: state.history.isUpdating,
-    checkedCollections: state.ui.checkedCollections,
-    collections: state.history.history
-      ? state.history.history.collections
-      : []
-  }),
+  state => {
+    let dateCollections = null
+    if (state.selected.date) {
+      dateCollections = {}
+
+      for (let collection of state.history.collections) {
+        for (let image of collection.images) {
+          if (toDay(image.timestamp) === state.selected.date) {
+            dateCollections[collection._id] = true
+          }
+        }
+      }
+    }
+
+    let queryCollecitons = null
+    if (Object.keys(state.checked.queries).length > 0) {
+      const queries = state.history.queries.filter(q => state.checked.queries[q._id])
+
+      if (queries.length > 0) {
+        queryCollecitons = {}
+
+        const combinedImages = queries.reduce((combinedImages, query) => {
+          return [...combinedImages, ...query.images]
+        }, [])
+
+        for (let image of combinedImages) {
+          for (let collectionId of image.collectionIds) {
+            queryCollecitons[collectionId] = true
+          }
+        }
+      }
+    }
+
+    let availableCollections = {}
+    for (let collection of state.history.collections) {
+      if (
+        (!dateCollections || dateCollections[collection._id]) &&
+        (!queryCollecitons || queryCollecitons[collection._id])
+      ) {
+        availableCollections[collection._id] = true
+      }
+    }
+
+    return {
+      userId: state.user.id,
+      isUpdating: state.history.isUpdating,
+      selectedCollectionId: state.selected.collectionId,
+      collections: state.history.collections,
+      availableCollections
+    }
+  },
   dispatch => ({
-    resetCheckedCollections: () => {
-      dispatch(resetCheckedCollections())
-    },
-    deleteCollections: (userId, collectionIds) => {
-      dispatch(deleteCollections(userId, collectionIds))
+    deleteCollection: (userId, collectionId) => {
+      dispatch(deleteCollections(userId, [collectionId], () => {
+        dispatch(resetSelectedCollection())
+      }))
     },
     createCollection: (userId) => {
       dispatch(createCollection(userId))
+    },
+    toggleSelectCollection: (collectionId) => {
+      dispatch(toggleSelectCollection(collectionId))
     }
   })
 )(CollectionFilter)
