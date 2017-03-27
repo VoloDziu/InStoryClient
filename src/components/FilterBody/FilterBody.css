@@ -7,7 +7,7 @@
   align-items: stretch;
 
   &__section {
-    padding-bottom: calc(var(--baseline) * 1.5);
+    /**/
   }
     &__section--main {
       flex: 1;

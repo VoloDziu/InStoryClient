@@ -1,85 +1,119 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {createSelector} from 'reselect'
 import DayPicker from 'react-day-picker'
 
 import {
   toDate,
-  toDay
+  toDay,
+  intersect,
+  getColorNames
 } from '../../constants'
 import {
-  toggleSelectDate,
-  uncheckOtherQueries,
-  uncheckOtherImages,
-  uncheckAllQueries,
+  toggleSelectDay,
+  resetSelectedImage,
   uncheckAllImages,
-  resetSelectedImage
+  uncheckAllQueriesExcept,
+  uncheckAllQueries
 } from '../../store/filterActions'
 
 import './Calendar.css'
 
 const Calendar = ({
-  dates,
-  availableDates,
-  selectedDate,
-  toggleSelectDate
+  days,
+  unavailableDays,
+  selectedDay,
+  toggleSelectDay,
+  dayQueries
 }) => {
   return (
     <div className="Calendar">
       <DayPicker
         enableOutsideDays
         modifiers={{
-          highlighted: dates.map(d => toDate(d._id)),
-          selected: toDate(selectedDate),
-          unavailable: dates.filter(d => !availableDates[d._id]).map(d => toDate(d._id))
+          highlighted: days.map(d => toDate(d)),
+          selected: toDate(selectedDay),
+          unavailable: unavailableDays.map(d => toDate(d))
         }}
-        onDayClick={d => toggleSelectDate(toDay(d), dates)} />
+        onDayClick={d => toggleSelectDay(toDay(d), selectedDay, dayQueries)} />
     </div>
   )
 }
 
-export default connect(
-  state => {
-    let collectionDates = null
-    if (state.selected.collectionId) {
-      const selectedCollection = state.history.collections.find(c => c._id === state.selected.collectionId)
+const getDays = createSelector(
+  [
+    (state) => state.history.images,
+    (state) => state.selected.collectionId,
+    (state) => state.checked.colors,
+    (state) => state.image.widthRange,
+    (state) => state.image.heightRange
+  ],
+  (images, selectedCollectionId, checkedColors, widthRange, heightRange) => {
+    const days = {}
+    const availableDays = {}
+    const dayQueries = {}
 
-      if (selectedCollection) {
-        collectionDates = {}
+    for (let image of images) {
+      const imageDay = toDay(image.timestamp)
 
-        for (let img of selectedCollection.images) {
-          collectionDates[toDay(img.timestamp)] = true
+      if (
+        (!selectedCollectionId || image.collectionIds.indexOf(selectedCollectionId) !== -1) &&
+        (Object.keys(checkedColors).length === 0 || intersect(getColorNames(image.colors), Object.keys(checkedColors))) &&
+        (widthRange.length === 0 || (image.width >= widthRange[0] && image.width <= widthRange[1])) &&
+        (heightRange.length === 0 || (image.height >= heightRange[0] && image.height <= heightRange[1]))
+      ) {
+        availableDays[imageDay] = true
+
+        if (!dayQueries[imageDay]) {
+          dayQueries[imageDay] = {}
         }
+        dayQueries[imageDay][image.queryId] = true
       }
-    }
 
-    let availableDates = {}
-    for (let date of state.history.dates) {
-      if (!collectionDates || collectionDates[date._id]) {
-        availableDates[date._id] = true
-      }
+      days[imageDay] = true
     }
 
     return {
-      availableDates,
-      dates: state.history.dates,
-      selectedDate: state.selected.date
+      days: Object.keys(days),
+      unavailableDays: Object.keys(days).filter(d => !availableDays[d]),
+      dayQueries
+    }
+  }
+)
+
+export default connect(
+  state => {
+    const {
+      days,
+      unavailableDays,
+      dayQueries
+    } = getDays(state)
+
+    return {
+      days,
+      unavailableDays,
+      selectedDay: state.selected.day,
+      checkedQueries: Object.keys(state.checked.queries),
+      dayQueries
     }
   },
-  dispatch => ({
-    toggleSelectDate: (date, dates) => {
-      dispatch(resetSelectedImage())
-      dispatch(toggleSelectDate(date))
-
-      const targetDate = dates.find(d => d._id === date)
-      if (targetDate) {
-        dispatch(uncheckOtherQueries(targetDate.queries.map(q => q._id)))
-        dispatch(uncheckOtherImages(targetDate.queries.reduce((acc, item) => {
-          return [...acc, item.images.map(i => i._id)]
-        }, [])))
-      } else {
-        dispatch(uncheckAllQueries())
+  dispatch => {
+    return {
+      toggleSelectDay: (day, selectedDay, dayQueries) => {
+        console.log(day, selectedDay, dayQueries)
+        dispatch(resetSelectedImage())
         dispatch(uncheckAllImages())
+
+        if (day !== selectedDay) {
+          if (dayQueries[day]) {
+            dispatch(uncheckAllQueriesExcept(Object.keys(dayQueries[day])))
+          } else {
+            dispatch(uncheckAllQueries())
+          }
+        }
+
+        dispatch(toggleSelectDay(day))
       }
     }
-  })
+  }
 )(Calendar)

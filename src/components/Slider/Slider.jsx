@@ -33,8 +33,8 @@ const Slider = ({
       step={STEP}
       max={roundedMax}
       value={roundedRange}>
-      <div className="S-handle__counter S-handle__counter--low">{roundedRange[0]}</div>
-      <div className="S-handle__counter S-handle__counter--high">{roundedRange[1]}</div>
+      <div className="S-handle__counter S-handle__counter--low">{`${roundedRange[0]}px`}</div>
+      <div className="S-handle__counter S-handle__counter--high">{`${roundedRange[1]}px`}</div>
     </ReactSlider>
   )
 }

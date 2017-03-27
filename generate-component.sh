@@ -18,7 +18,8 @@ import './$componentName.css'
 
 const $componentName = () => {
   return (
-    <div className=\"$componentName\">
+    <div
+      className=\"$componentName\">
       I am $componentName component!
     </div>
   )

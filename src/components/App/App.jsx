@@ -24,16 +24,6 @@ class App extends React.Component {
   render () {
     const {isFetching} = this.props
 
-    // <CollectionFilter />
-    // <Filter
-    //   value="image"
-    //   header={
-    //     <div>Image filter header</div>
-    //   }
-    //   body={
-    //     <ImageFilter />
-    //   } />
-
     if (isFetching) {
       return <Loading />
     } else {
@@ -60,7 +50,7 @@ export default compose(
     state => ({
       isFetching: state.history.isFetching,
       userId: state.user.id,
-      showHistoryFilters: state.ui.selectedDate !== null || state.ui.checkedQueries.length > 0
+      showHistoryFilters: state.ui.selectedDay !== null || state.ui.checkedQueries.length > 0
     }),
     (dispatch, ownProps) => ({
       fetchHistory: (userId) => {

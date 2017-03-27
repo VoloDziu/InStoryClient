@@ -2,4 +2,5 @@
 
 .Calendar {
   padding-top: calc(var(--baseline) * 1.5);
+  padding-bottom: calc(var(--baseline) * 0.5);
 }

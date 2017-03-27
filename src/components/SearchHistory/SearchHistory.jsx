@@ -1,18 +1,20 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {createSelector} from 'reselect'
 
 import {toDay} from '../../constants'
 import Timestamp from '../Timestamp'
 import SearchQuery from '../SearchQuery'
 
+import './SearchHistory.css'
+
 const SearchHistory = ({
-  queries,
-  availableQueries
+  vislbleQueries
 }) => {
   let elements = []
   let lastQueryTimestamp = null
 
-  for (let query of queries) {
+  for (let query of vislbleQueries) {
     const queryTimestamp = toDay(query.timestamp)
 
     if (queryTimestamp !== lastQueryTimestamp) {
@@ -27,7 +29,6 @@ const SearchHistory = ({
     elements.push(
       <SearchQuery
         query={query}
-        available={availableQueries[query._id]}
         key={query._id} />
     )
   }
@@ -40,41 +41,22 @@ const SearchHistory = ({
   )
 }
 
-export default connect(
-  state => {
-    let queries = []
-    if (state.selected.date) {
-      const selectedDate = state.history.dates.find(d => d._id === state.selected.date)
-
-      if (selectedDate) {
-        queries = selectedDate.queries
-      }
+const getVisibleQueries = createSelector(
+  [
+    (state) => state.selected.day,
+    (state) => state.history.queries
+  ],
+  (day, queries) => {
+    if (day) {
+      return queries.filter(q => toDay(q.timestamp) === day)
     } else {
-      queries = state.history.queries
-    }
-
-    let collectionQueries = null
-    if (state.selected.collectionId) {
-      const selectedCollection = state.history.collections.find(c => c._id === state.selected.collectionId)
-
-      if (selectedCollection) {
-        collectionQueries = {}
-        for (let img of selectedCollection.images) {
-          collectionQueries[img.queryId] = true
-        }
-      }
-    }
-
-    let availableQueries = {}
-    for (let query of queries) {
-      if (!collectionQueries || collectionQueries[query._id]) {
-        availableQueries[query._id] = true
-      }
-    }
-
-    return {
-      queries,
-      availableQueries
+      return queries
     }
   }
+)
+
+export default connect(
+  state => ({
+    vislbleQueries: getVisibleQueries(state)
+  })
 )(SearchHistory)

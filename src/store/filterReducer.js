@@ -1,16 +1,17 @@
 import {
   TOGGLE_SELECT_IMAGE,
-  TOGGLE_SELECT_DATE,
+  TOGGLE_SELECT_DAY,
   TOGGLE_SELECT_COLLECTION,
   RESET_SELECTED_IMAGE,
   RESET_SELECTED_COLLECTION,
   TOGGLE_CHECK_IMAGE,
   TOGGLE_CHECK_QUERY,
-  UNCHECK_OTHER_QUERIES,
-  UNCHECK_OTHER_IMAGES,
+  TOGGLE_CHECK_COLOR,
   UNCHECK_ALL_QUERIES,
+  UNCHECK_ALL_QUERIES_EXCEPT,
   UNCHECK_ALL_IMAGES,
   UNCHECK_IMAGES,
+  UNCHECK_ALL_IMAGES_EXCEPT,
   SET_WIDTH,
   SET_HEIGHT
 } from './filterActions'
@@ -25,21 +26,6 @@ const toggle = (
     delete res[key]
   } else {
     res[key] = true
-  }
-
-  return res
-}
-
-const removeOthers = (
-  obj,
-  keys
-) => {
-  const res = Object.assign({}, obj)
-
-  for (let key of Object.keys(res)) {
-    if (keys.indexOf(key) === -1) {
-      delete res[key]
-    }
   }
 
   return res
@@ -60,10 +46,25 @@ const removeAll = (
   return res
 }
 
+const removeAllExcept = (
+  obj,
+  keys
+) => {
+  const res = Object.assign({}, obj)
+
+  for (let key of Object.keys(res)) {
+    if (keys.indexOf(key) === -1) {
+      delete res[key]
+    }
+  }
+
+  return res
+}
+
 export const selected = (
   state = {
     imageId: null,
-    date: null,
+    day: null,
     collectionId: null
   },
   action
@@ -79,14 +80,14 @@ export const selected = (
           imageId: action.imageId
         })
       }
-    case TOGGLE_SELECT_DATE:
-      if (action.date === state.date) {
+    case TOGGLE_SELECT_DAY:
+      if (action.day === state.day) {
         return Object.assign({}, state, {
-          date: null
+          day: null
         })
       } else {
         return Object.assign({}, state, {
-          date: action.date
+          day: action.day
         })
       }
     case TOGGLE_SELECT_COLLECTION:
@@ -115,7 +116,8 @@ export const selected = (
 export const checked = (
   state = {
     images: {},
-    queries: {}
+    queries: {},
+    colors: {}
   },
   action
 ) => {
@@ -128,14 +130,6 @@ export const checked = (
       return Object.assign({}, state, {
         queries: toggle(state.queries, action.queryId)
       })
-    case UNCHECK_OTHER_QUERIES:
-      return Object.assign({}, state, {
-        queries: removeOthers(state.queries, action.queryIds)
-      })
-    case UNCHECK_OTHER_IMAGES:
-      return Object.assign({}, state, {
-        images: removeOthers(state.images, action.imageIds)
-      })
     case UNCHECK_ALL_QUERIES:
       return Object.assign({}, state, {
         queries: {}
@@ -144,9 +138,21 @@ export const checked = (
       return Object.assign({}, state, {
         images: {}
       })
+    case TOGGLE_CHECK_COLOR:
+      return Object.assign({}, state, {
+        colors: toggle(state.colors, action.colorId)
+      })
     case UNCHECK_IMAGES:
       return Object.assign({}, state, {
         images: removeAll(state.images, action.imageIds)
+      })
+    case UNCHECK_ALL_QUERIES_EXCEPT:
+      return Object.assign({}, state, {
+        queries: removeAllExcept(state.queries, action.queryIds)
+      })
+    case UNCHECK_ALL_IMAGES_EXCEPT:
+      return Object.assign({}, state, {
+        images: removeAllExcept(state.images, action.imageIds)
       })
     default:
       return state

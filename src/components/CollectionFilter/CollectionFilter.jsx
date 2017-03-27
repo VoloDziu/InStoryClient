@@ -16,15 +16,11 @@ import {
   deleteCollections,
   createCollection
 } from '../../store/historyActions'
-import {
-  toDay
-} from '../../constants'
 
 import './CollectionFilter.css'
 
 const CollectionFilter = ({
   collections,
-  availableCollections,
   selectedCollectionId,
   isUpdating,
   userId,
@@ -75,8 +71,7 @@ const CollectionFilter = ({
             {collections.map((c, index) =>
               <Collection
                 key={index}
-                collection={c}
-                available={availableCollections[c._id]} />
+                collection={c} />
             )}
           </FilterBodySection>
         </FilterBody>
@@ -86,54 +81,11 @@ const CollectionFilter = ({
 
 export default connect(
   state => {
-    let dateCollections = null
-    if (state.selected.date) {
-      dateCollections = {}
-
-      for (let collection of state.history.collections) {
-        for (let image of collection.images) {
-          if (toDay(image.timestamp) === state.selected.date) {
-            dateCollections[collection._id] = true
-          }
-        }
-      }
-    }
-
-    let queryCollecitons = null
-    if (Object.keys(state.checked.queries).length > 0) {
-      const queries = state.history.queries.filter(q => state.checked.queries[q._id])
-
-      if (queries.length > 0) {
-        queryCollecitons = {}
-
-        const combinedImages = queries.reduce((combinedImages, query) => {
-          return [...combinedImages, ...query.images]
-        }, [])
-
-        for (let image of combinedImages) {
-          for (let collectionId of image.collectionIds) {
-            queryCollecitons[collectionId] = true
-          }
-        }
-      }
-    }
-
-    let availableCollections = {}
-    for (let collection of state.history.collections) {
-      if (
-        (!dateCollections || dateCollections[collection._id]) &&
-        (!queryCollecitons || queryCollecitons[collection._id])
-      ) {
-        availableCollections[collection._id] = true
-      }
-    }
-
     return {
       userId: state.user.id,
       isUpdating: state.history.isUpdating,
       selectedCollectionId: state.selected.collectionId,
-      collections: state.history.collections,
-      availableCollections
+      collections: state.history.collections
     }
   },
   dispatch => ({

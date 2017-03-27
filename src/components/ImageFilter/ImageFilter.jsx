@@ -23,7 +23,8 @@ const ImageFilter = () => {
             <ResolutionPicker />
           </FilterBodySection>
 
-          <FilterBodySection>
+          <FilterBodySection
+            main>
             <ColorPicker />
           </FilterBodySection>
         </FilterBody>

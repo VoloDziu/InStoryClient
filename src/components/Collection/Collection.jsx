@@ -3,8 +3,8 @@ import {compose} from 'redux'
 import {connect} from 'react-redux'
 import classnames from 'classnames'
 import {DropTarget} from 'react-dnd'
+import {createSelector} from 'reselect'
 
-import {IMAGE} from '../../constants'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
 import TextInput from '../../UI/TextInput'
@@ -15,11 +15,17 @@ import {
   addImagesToCollection
 } from '../../store/historyActions'
 import {
-  toggleSelectCollection,
   resetSelectedImage,
-  uncheckOtherImages,
-  uncheckAllImages
+  toggleSelectCollection,
+  uncheckAllImages,
+  uncheckAllImagesExcept
 } from '../../store/filterActions'
+import {
+  IMAGE,
+  toDay,
+  intersect,
+  getColorNames
+} from '../../constants'
 
 import './Collection.css'
 
@@ -86,7 +92,7 @@ class Collection extends React.Component {
   render () {
     const {
       collection,
-      available,
+      images,
       isUpdating,
       connectDropTarget,
       isOver,
@@ -95,10 +101,10 @@ class Collection extends React.Component {
     } = this.props
 
     const classes = classnames('Collection', {
-      'Collection--interactive': !this.state.isEditing && available,
+      'Collection--interactive': !this.state.isEditing,
       'Collection--is-over': isOver,
       'Collection--selected': isSelected,
-      'Collection--unavailable': !available
+      'Collection--unavailable': images.length === 0
     })
 
     if (this.state.isEditing) {
@@ -108,13 +114,7 @@ class Collection extends React.Component {
           <Flex>
             <FlexItem>
               <Checkbox
-                onClick={() => {
-                  if (!available) {
-                    return
-                  }
-
-                  toggleSelectCollection()
-                }}
+                onClick={() => toggleSelectCollection(isSelected, images)}
                 checked={isSelected} />
             </FlexItem>
 
@@ -163,13 +163,7 @@ class Collection extends React.Component {
             <FlexItem
               main>
               <div
-                onClick={() => {
-                  if (!available) {
-                    return
-                  }
-
-                  toggleSelectCollection()
-                }}
+                onClick={() => toggleSelectCollection(isSelected, images)}
                 className="Collection__body">
                 <Flex>
                   <FlexItem>
@@ -202,7 +196,7 @@ class Collection extends React.Component {
                 </div>
 
                 <div className="Collection__info">
-                  {collection.images.length} images
+                  {images.length} images
                 </div>
               </div>
             </FlexItem>
@@ -213,12 +207,44 @@ class Collection extends React.Component {
   }
 }
 
+const makeGetImages = () => {
+  return createSelector(
+    [
+      (state, props) => state.history.images.filter(img => img.collectionIds.indexOf(props.collection._id) !== -1),
+      (state) => state.selected.day,
+      (state) => state.checked.queries,
+      (state) => state.checked.colors,
+      (state) => state.image.widthRange,
+      (state) => state.image.heightRange
+    ],
+    (images, selectedDay, checkedQueries, checkedColors, widthRange, heightRange) => {
+      const matchingImages = []
+
+      for (let image of images) {
+        if (
+          (!selectedDay || toDay(image.timestamp) === selectedDay) &&
+          (Object.keys(checkedQueries).length === 0 || Object.keys(checkedQueries).indexOf(image.queryId) !== -1) &&
+          (Object.keys(checkedColors).length === 0 || intersect(getColorNames(image.colors), Object.keys(checkedColors))) &&
+          (widthRange.length === 0 || (image.width >= widthRange[0] && image.width <= widthRange[1])) &&
+          (heightRange.length === 0 || (image.height >= heightRange[0] && image.height <= heightRange[1]))
+        ) {
+          matchingImages.push(image)
+        }
+      }
+
+      return matchingImages
+    }
+  )
+}
+
 export default compose(
   connect(
     (state, ownProps) => {
       const {collection} = ownProps
+      const getImages = makeGetImages()
 
       return {
+        images: getImages(state, ownProps),
         userId: state.user.id,
         checkedImages: Object.keys(state.checked.images),
         isUpdating: state.history.isUpdating,
@@ -229,9 +255,13 @@ export default compose(
       const {collection} = ownProps
 
       return {
-        toggleSelectCollection: (collections) => {
+        toggleSelectCollection: (isSelected, collectionImages) => {
           dispatch(resetSelectedImage())
-          dispatch(uncheckOtherImages(collection.images.map(i => i._id)))
+
+          if (!isSelected) {
+            dispatch(uncheckAllImagesExcept(collectionImages.map(i => i._id)))
+          }
+
           dispatch(toggleSelectCollection(collection._id))
         },
         updateCollection: (userId, collectionId, collection, callback) => {

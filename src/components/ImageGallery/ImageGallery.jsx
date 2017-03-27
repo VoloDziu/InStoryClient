@@ -1,9 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {createSelector} from 'reselect'
 
 import {
   IMAGES_PER_ROW,
-  toDay
+  toDay,
+  intersect,
+  getColorNames
 } from '../../constants'
 import GalleryRow from '../GalleryRow'
 import FiltersPreview from '../FiltersPreview'
@@ -17,12 +20,7 @@ class ImageGallery extends React.Component {
   render () {
     const {
       images,
-      checkedImages,
-      selectedCollectionId,
-      selectedDate,
-      checkedQueries,
-      widthRange,
-      heightRange
+      checkedImages
     } = this.props
 
     const elements = []
@@ -34,43 +32,35 @@ class ImageGallery extends React.Component {
     while (i < images.length) {
       let image = images[i]
 
-      if (
-        (!selectedCollectionId || image.collectionIds.indexOf(selectedCollectionId) !== -1) &&
-        (!selectedDate || toDay(image.timestamp) === selectedDate) &&
-        (checkedQueries.length === 0 || checkedQueries.indexOf(image.queryId) !== -1) &&
-        (!image.width || image.width >= widthRange[0] && image.width <= widthRange[1]) &&
-        (!image.height || image.height >= heightRange[0] && image.height <= heightRange[1])
-      ) {
-        if (!lastImage || toDay(lastImage.timestamp) !== toDay(image.timestamp)) {
-          elements.push(
-            <GalleryRow
-              key={i}
-              images={imageRow} />
-          )
-          elements.push(
-            <Box
-              key={image.timestamp}
-              l={2.5} r={2.5} b={0}>
-              <Timestamp
-                date={toDay(image.timestamp)} />
-            </Box>
-          )
+      if (!lastImage || toDay(lastImage.timestamp) !== toDay(image.timestamp)) {
+        elements.push(
+          <GalleryRow
+            key={i}
+            images={imageRow} />
+        )
+        elements.push(
+          <Box
+            key={image.timestamp}
+            l={2.5} r={2.5} b={0}>
+            <Timestamp
+              date={toDay(image.timestamp)} />
+          </Box>
+        )
 
-          imageRow = []
-        }
+        imageRow = []
+      }
 
-        imageRow.push(image)
-        lastImage = image
+      imageRow.push(image)
+      lastImage = image
 
-        if (imageRow.length === IMAGES_PER_ROW) {
-          elements.push(
-            <GalleryRow
-              key={i}
-              images={imageRow} />
-          )
+      if (imageRow.length === IMAGES_PER_ROW) {
+        elements.push(
+          <GalleryRow
+            key={i}
+            images={imageRow} />
+        )
 
-          imageRow = []
-        }
+        imageRow = []
       }
 
       i++
@@ -105,18 +95,39 @@ class ImageGallery extends React.Component {
   }
 }
 
+const getImages = createSelector(
+  [
+    (state) => state.history.images,
+    (state) => state.selected.day,
+    (state) => state.selected.collectionId,
+    (state) => state.checked.queries,
+    (state) => state.checked.colors,
+    (state) => state.image.widthRange,
+    (state) => state.image.heightRange
+  ],
+  (images, selectedDay, selectedCollectionId, checkedQueries, checkedColors, widthRange, heightRange) => {
+    let matchingImages = []
+
+    for (let image of images) {
+      if (
+        (!selectedDay || toDay(image.timestamp) === selectedDay) &&
+        (!selectedCollectionId || image.collectionIds.indexOf(selectedCollectionId) !== -1) &&
+        (Object.keys(checkedQueries).length === 0 || Object.keys(checkedQueries).indexOf(image.queryId) !== -1) &&
+        (Object.keys(checkedColors).length === 0 || intersect(getColorNames(image.colors), Object.keys(checkedColors))) &&
+        (widthRange.length === 0 || (image.width >= widthRange[0] && image.width <= widthRange[1])) &&
+        (heightRange.length === 0 || (image.height >= heightRange[0] && image.height <= heightRange[1]))
+      ) {
+        matchingImages.push(image)
+      }
+    }
+
+    return matchingImages
+  }
+)
+
 export default connect(
   state => ({
-    images: state.history.images,
-    selectedCollectionId: state.selected.collectionId,
-    selectedDate: state.selected.date,
-    checkedQueries: Object.keys(state.checked.queries),
-    checkedImages: Object.keys(state.checked.images),
-    widthRange: state.image.widthRange.length
-      ? state.image.widthRange
-      : [0, state.history.maxWidth],
-    heightRange: state.image.heightRange.length
-      ? state.image.heightRange
-      : [0, state.history.maxHeight]
+    images: getImages(state),
+    checkedImages: Object.keys(state.checked.images)
   })
 )(ImageGallery)

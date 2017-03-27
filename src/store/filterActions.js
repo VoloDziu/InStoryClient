@@ -20,7 +20,7 @@ export const setWidth = (
 }
 
 export const TOGGLE_SELECT_IMAGE = 'TOGGLE_SELECT_IMAGE'
-export const TOGGLE_SELECT_DATE = 'TOGGLE_SELECT_DATE'
+export const TOGGLE_SELECT_DAY = 'TOGGLE_SELECT_DAY'
 export const TOGGLE_SELECT_COLLECTION = 'TOGGLE_SELECT_COLLECTION'
 export const RESET_SELECTED_IMAGE = 'RESET_SELECTED_IMAGE'
 export const RESET_SELECTED_COLLECTION = 'RESET_SELECTED_COLLECTION'
@@ -32,11 +32,11 @@ export const toggleSelectImage = (
   imageId
 })
 
-export const toggleSelectDate = (
-  date
+export const toggleSelectDay = (
+  day
 ) => ({
-  type: TOGGLE_SELECT_DATE,
-  date
+  type: TOGGLE_SELECT_DAY,
+  day
 })
 
 export const toggleSelectCollection = (
@@ -56,13 +56,21 @@ export const resetSelectedCollection = (
   type: RESET_SELECTED_COLLECTION
 })
 
+export const TOGGLE_CHECK_COLOR = 'TOGGLE_CHECK_COLOR'
 export const TOGGLE_CHECK_IMAGE = 'TOGGLE_CHECK_IMAGE'
 export const TOGGLE_CHECK_QUERY = 'TOGGLE_CHECK_QUERY'
-export const UNCHECK_OTHER_QUERIES = 'UNCHECK_OTHER_QUERIES'
-export const UNCHECK_OTHER_IMAGES = 'UNCHECK_OTHER_IMAGES'
 export const UNCHECK_ALL_QUERIES = 'UNCHECK_ALL_QUERIES'
+export const UNCHECK_ALL_QUERIES_EXCEPT = 'UNCHECK_ALL_QUERIES_EXCEPT'
 export const UNCHECK_ALL_IMAGES = 'UNCHECK_ALL_IMAGES'
 export const UNCHECK_IMAGES = 'UNCHECK_IMAGES'
+export const UNCHECK_ALL_IMAGES_EXCEPT = 'UNCHECK_ALL_IMAGES_EXCEPT'
+
+export const toggleCheckColor = (
+  colorId
+) => ({
+  type: TOGGLE_CHECK_COLOR,
+  colorId
+})
 
 export const toggleCheckImage = (
   imageId
@@ -78,28 +86,28 @@ export const toggleCheckQuery = (
   queryId
 })
 
-export const uncheckOtherQueries = (
-  queryIds
-) => ({
-  type: UNCHECK_OTHER_QUERIES,
-  queryIds
-})
-
-export const uncheckOtherImages = (
-  imageIds
-) => ({
-  type: UNCHECK_OTHER_IMAGES,
-  imageIds
-})
-
 export const uncheckAllQueries = (
 ) => ({
   type: UNCHECK_ALL_QUERIES
 })
 
+export const uncheckAllQueriesExcept = (
+  queryIds
+) => ({
+  type: UNCHECK_ALL_QUERIES_EXCEPT,
+  queryIds
+})
+
 export const uncheckAllImages = (
 ) => ({
   type: UNCHECK_ALL_IMAGES
+})
+
+export const uncheckAllImagesExcept = (
+  imageIds
+) => ({
+  type: UNCHECK_ALL_IMAGES_EXCEPT,
+  imageIds
 })
 
 export const uncheckImages = (

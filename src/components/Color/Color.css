@@ -1,6 +1,6 @@
 @import '../../variables.css';
 
-.SearchQuery {
+.Color {
   padding: calc(var(--baseline) * 0.25) calc(var(--baseline) * 1.5);
   cursor: pointer;
 
@@ -10,6 +10,14 @@
 
   &__title {
     /* ... */
+  }
+
+  &__hue {
+    display: block;
+    width: calc(var(--baseline) * 1.25);
+    height: calc(var(--baseline) * 1.25);
+
+    border-radius: calc(var(--baseline) / 4);
   }
 
   &__info {
@@ -22,13 +30,10 @@
     color: var(--color__greyL);
   }
 }
-  .SearchQuery--checked {
+  .Color--checked {
     background: color(var(--color__teal) lightness(+10%));
 
     &:hover {
       background: color(var(--color__teal) lightness(+10%));
     }
-  }
-  .SearchQuery--unavailable {
-    opacity: 0.3;
   }

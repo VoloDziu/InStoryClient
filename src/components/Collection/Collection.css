@@ -55,10 +55,6 @@
       background: transparent;
     }
 
-    & .Collection__body {
-      cursor: auto;
-    }
-
     & .Collection__name {
       color: color(var(--color__greyD) alpha(-50%));
     }
