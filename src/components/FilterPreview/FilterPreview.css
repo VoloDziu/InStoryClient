@@ -49,6 +49,7 @@
   }
 
   &__type {
+    padding-right: calc(var(--baseline) * 0.25);
     font-size: 0.750rem;
     font-weight: 400;
     line-height: calc(var(--baseline) * 1.5);

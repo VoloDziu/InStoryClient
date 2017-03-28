@@ -12,14 +12,6 @@
     /* ... */
   }
 
-  &__hue {
-    display: block;
-    width: calc(var(--baseline) * 1.25);
-    height: calc(var(--baseline) * 1.25);
-
-    border-radius: calc(var(--baseline) / 4);
-  }
-
   &__info {
     width: calc(var(--baseline) * 5);
 

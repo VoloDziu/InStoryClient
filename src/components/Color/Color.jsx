@@ -14,6 +14,7 @@ import {
   resetSelectedImage
 } from '../../store/filterActions'
 import Checkbox from '../Checkbox'
+import ColorSquare from '../ColorSquare'
 import {
   getColorNames,
   toDay
@@ -45,11 +46,8 @@ const Color = ({
 
         <FlexItem
           spacing={1}>
-          <div
-            style={{
-              backgroundColor: color.hex
-            }}
-            className="Color__hue" />
+          <ColorSquare
+            color={color} />
         </FlexItem>
 
         <FlexItem
@@ -124,11 +122,11 @@ export default connect(
         dispatch(resetSelectedImage())
 
         if (isChecked) {
-          if (checkedColors.length > 1) {
+          if (Object.keys(checkedColors).length > 1) {
             dispatch(uncheckImages(colorImages.map(i => i._id)))
           }
         } else {
-          if (checkedColors.length === 0) {
+          if (Object.keys(checkedColors).length === 0) {
             dispatch(uncheckAllImagesExcept(colorImages.map(i => i._id)))
           }
         }

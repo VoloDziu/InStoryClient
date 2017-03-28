@@ -64,6 +64,12 @@ export const UNCHECK_ALL_QUERIES_EXCEPT = 'UNCHECK_ALL_QUERIES_EXCEPT'
 export const UNCHECK_ALL_IMAGES = 'UNCHECK_ALL_IMAGES'
 export const UNCHECK_IMAGES = 'UNCHECK_IMAGES'
 export const UNCHECK_ALL_IMAGES_EXCEPT = 'UNCHECK_ALL_IMAGES_EXCEPT'
+export const UNCHECK_ALL_COLORS = 'UNCHECK_ALL_COLORS'
+
+export const uncheckAllColors = (
+) => ({
+  type: UNCHECK_ALL_COLORS
+})
 
 export const toggleCheckColor = (
   colorId

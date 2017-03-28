@@ -1,15 +1,19 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {createSelector} from 'reselect'
 
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import {
   resetSelectedCollection,
   uncheckAllQueries,
-  toggleSelectDate,
+  toggleSelectDay,
   setHeight,
-  setWidth
+  setWidth,
+  uncheckAllColors
 } from '../../store/filterActions'
 import FilterPreview from '../FilterPreview'
+import ColorSquare from '../ColorSquare'
+import {COLORS} from '../../constants'
 
 import './FiltersPreview.css'
 
@@ -23,41 +27,61 @@ const truncate = (str, length) => {
 
 const FiltersPreview = ({
   selectedCollection,
-  selectedDate,
+  selectedDay,
   checkedQueries,
   resetSelectedCollection,
   uncheckAllQueries,
-  toggleSelectDate,
+  toggleSelectDay,
   heightRange,
   widthRange,
   hasHeightRange,
   hasWidthRange,
   setHeightRange,
-  setWidthRange
+  setWidthRange,
+  checkedColors,
+  uncheckAllColors
 }) => {
   let filterElements = []
   if (selectedCollection) {
     filterElements.push(
       <FilterPreview
-        type="C:"
         name={truncate(selectedCollection.name, 15)}
         removeCallback={resetSelectedCollection} />
     )
   }
-  if (selectedDate) {
+  if (selectedDay) {
     filterElements.push(
       <FilterPreview
-        type="D:"
-        name={selectedDate}
-        removeCallback={() => toggleSelectDate(selectedDate)} />
+        name={selectedDay}
+        removeCallback={() => toggleSelectDay(selectedDay)} />
     )
   }
   if (checkedQueries.length > 0) {
     filterElements.push(
       <FilterPreview
-        type="Q:"
         name={checkedQueries.length === 1 ? '1 query' : `${checkedQueries.length} queries`}
         removeCallback={uncheckAllQueries} />
+    )
+  }
+  if (checkedColors.length > 0) {
+    filterElements.push(
+      <FilterPreview
+        type="Colors:"
+        name={
+          <Flex
+            offset={0.25}>
+            {checkedColors.map((c, index) =>
+              <FlexItem
+                spacing={0.25}
+                key={index}>
+                <ColorSquare
+                  color={c} />
+              </FlexItem>
+            )}
+          </Flex>
+        }
+        removeCallback={uncheckAllColors}
+        />
     )
   }
   if (hasHeightRange) {
@@ -111,22 +135,65 @@ const FiltersPreview = ({
   )
 }
 
+const getSelectedCollection = createSelector(
+  [
+    (state) => state.selected.collectionId,
+    (state) => state.history.collections
+  ],
+  (selectedId, collections) => {
+    return collections.find(c => c._id === selectedId)
+  }
+)
+
+const getMaxDimensions = createSelector(
+  (state) => state.history.images,
+  (images) => {
+    let maxHeight = 0
+    let maxWidth = 0
+
+    for (let image of images) {
+      if (image.height > maxHeight) {
+        maxHeight = image.height
+      }
+
+      if (image.width > maxWidth) {
+        maxWidth = image.width
+      }
+    }
+
+    return {maxHeight, maxWidth}
+  }
+)
+
+const getCheckedColors = createSelector(
+  (state) => state.checked.colors,
+  (colors) => COLORS.filter(c => colors[c.name] === true)
+)
+
 export default connect(
-  state => ({
-    selectedDate: state.selected.date,
-    selectedCollection: state.history.collections.find(c => c._id === state.selected.collectionId),
-    checkedQueries: state.history.queries.filter(q => state.checked.queries[q._id]),
-    heightRange: state.image.heightRange.length
-      ? state.image.heightRange
-      : [0, state.history.maxHeight],
-    widthRange: state.image.widthRange.length
-      ? state.image.widthRange
-      : [0, state.history.maxWidth],
-    hasWidthRange: state.image.widthRange.length &&
-      (state.image.widthRange[0] > 0 || state.image.widthRange[1] < state.history.maxWidth),
-    hasHeightRange: state.image.heightRange.length &&
-      (state.image.heightRange[0] > 0 || state.image.heightRange[1] < state.history.maxHeight)
-  }),
+  state => {
+    const {
+      maxHeight,
+      maxWidth
+    } = getMaxDimensions(state)
+
+    return {
+      selectedDay: state.selected.day,
+      selectedCollection: getSelectedCollection(state),
+      checkedQueries: Object.keys(state.checked.queries),
+      checkedColors: getCheckedColors(state),
+      heightRange: state.image.heightRange.length === 0
+        ? [0, maxHeight]
+        : state.image.heightRange,
+      widthRange: state.image.widthRange.length === 0
+        ? [0, maxWidth]
+        : state.image.widthRange,
+      hasWidthRange: state.image.widthRange.length &&
+        (state.image.widthRange[0] > 0 || state.image.widthRange[1] < maxWidth),
+      hasHeightRange: state.image.heightRange.length &&
+        (state.image.heightRange[0] > 0 || state.image.heightRange[1] < maxHeight)
+    }
+  },
   dispatch => ({
     resetSelectedCollection: () => {
       dispatch(resetSelectedCollection())
@@ -134,8 +201,11 @@ export default connect(
     uncheckAllQueries: () => {
       dispatch(uncheckAllQueries())
     },
-    toggleSelectDate: (date) => {
-      dispatch(toggleSelectDate(date))
+    uncheckAllColors: () => {
+      dispatch(uncheckAllColors())
+    },
+    toggleSelectDay: (day) => {
+      dispatch(toggleSelectDay(day))
     },
     setHeightRange: () => {
       dispatch(setHeight([]))

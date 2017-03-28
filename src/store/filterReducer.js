@@ -12,6 +12,7 @@ import {
   UNCHECK_ALL_IMAGES,
   UNCHECK_IMAGES,
   UNCHECK_ALL_IMAGES_EXCEPT,
+  UNCHECK_ALL_COLORS,
   SET_WIDTH,
   SET_HEIGHT
 } from './filterActions'
@@ -137,6 +138,10 @@ export const checked = (
     case UNCHECK_ALL_IMAGES:
       return Object.assign({}, state, {
         images: {}
+      })
+    case UNCHECK_ALL_COLORS:
+      return Object.assign({}, state, {
+        colors: {}
       })
     case TOGGLE_CHECK_COLOR:
       return Object.assign({}, state, {
