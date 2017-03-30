@@ -47,7 +47,7 @@ const Color = ({
         <FlexItem
           spacing={1}>
           <ColorSquare
-            color={color} />
+            color={color.hex} />
         </FlexItem>
 
         <FlexItem

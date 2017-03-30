@@ -8,7 +8,7 @@ const ColorSquare = ({
   return (
     <div
       style={{
-        backgroundColor: color.hex
+        backgroundColor: color
       }}
       className="ColorSquare" />
   )

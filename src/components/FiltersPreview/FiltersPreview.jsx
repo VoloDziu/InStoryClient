@@ -13,17 +13,9 @@ import {
 } from '../../store/filterActions'
 import FilterPreview from '../FilterPreview'
 import ColorSquare from '../ColorSquare'
-import {COLORS} from '../../constants'
+import {COLORS, truncate} from '../../constants'
 
 import './FiltersPreview.css'
-
-const truncate = (str, length) => {
-  if (str.length > length) {
-    return str.slice(0, length - 3) + '...'
-  } else {
-    return str
-  }
-}
 
 const FiltersPreview = ({
   selectedCollection,
@@ -75,7 +67,7 @@ const FiltersPreview = ({
                 spacing={0.25}
                 key={index}>
                 <ColorSquare
-                  color={c} />
+                  color={c.hex} />
               </FlexItem>
             )}
           </Flex>

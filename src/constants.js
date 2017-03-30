@@ -7,76 +7,154 @@ export const CHANGE_TIMEOUT_DELAY = 300
 
 export const COLORS = [
   {
+    name: 'Red',
+    hex: '#ff1a1a',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return ((hue >= 0 && hue <= 10) || (hue >= 345 && hue <= 360)) &&
+        lightness >= 0.25 && lightness <= 0.85 &&
+        saturation >= 0.4
+    }
+  },
+  {
     name: 'Orange',
-    attributeIndex: 0,
-    range: [0, 50],
-    hex: '#ff661a'
+    hex: '#ff661a',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 20 && hue <= 40 &&
+        lightness >= 0.40 && lightness <= 0.85 &&
+        saturation >= 0.4
+    }
   },
   {
     name: 'Yellow',
-    attributeIndex: 0,
-    range: [45, 75],
-    hex: '#ffff00'
+    hex: '#ffff00',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 35 && hue <= 60 &&
+        lightness >= 0.40 && lightness <= 0.85 &&
+        saturation >= 0.4
+    }
   },
   {
     name: 'Green',
-    attributeIndex: 0,
-    range: [65, 150],
-    hex: '#25e000'
+    hex: '#25e000',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 75 && hue <= 160 &&
+        lightness >= 0.15 && lightness <= 0.85 &&
+        saturation >= 0.4
+    }
   },
   {
-    name: 'Turqoise',
-    attributeIndex: 0,
-    range: [140, 170],
-    hex: '#00ffb7'
-  },
-  {
-    name: 'Aquamarine',
-    attributeIndex: 0,
-    range: [170, 190],
-    hex: '#00fffb'
+    name: 'Teal',
+    hex: '#00fffb',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 165 && hue <= 195 &&
+        lightness >= 0.40 && lightness <= 0.70 &&
+        saturation >= 0.40
+    }
   },
   {
     name: 'Blue',
-    attributeIndex: 0,
-    range: [190, 250],
-    hex: '#0056e0'
+    hex: '#0056e0',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 190 && hue <= 230 &&
+        lightness >= 0.30 && lightness <= 0.60 &&
+        saturation >= 0.4
+    }
   },
   {
     name: 'Purple',
-    attributeIndex: 0,
-    range: [250, 300],
-    hex: '#bc1fff'
+    hex: '#bc1fff',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 265 && hue <= 270 &&
+        lightness >= 0.25 && lightness <= 0.75 &&
+        saturation >= 0.4
+    }
   },
   {
     name: 'Pink',
-    attributeIndex: 0,
-    range: [295, 335],
-    hex: '#ff3db1'
-  },
-  {
-    name: 'Red',
-    attributeIndex: 0,
-    range: [330, 360],
-    hex: '#ff1a1a'
-  },
-  {
-    name: 'Grey',
-    attributeIndex: 1,
-    range: [0, 0.05],
-    hex: '#878787'
-  },
-  {
-    name: 'Black',
-    attributeIndex: 2,
-    range: [0, 0.05],
-    hex: '#000000'
+    hex: '#ff3db1',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 305 && hue <= 330 &&
+        lightness >= 0.50 && lightness <= 0.70 &&
+        saturation >= 0.4
+    }
   },
   {
     name: 'White',
-    attributeIndex: 2,
-    range: [0.095, 1],
-    hex: '#ffffff'
+    hex: '#ffffff',
+    match: (hsl) => {
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return lightness >= 0.90 &&
+        saturation <= 0.10
+    }
+  },
+  {
+    name: 'Grey',
+    hex: '#878787',
+    match: (hsl) => {
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return lightness >= 0.20 && lightness <= 0.50 &&
+        saturation <= 0.10
+    }
+  },
+  {
+    name: 'Black',
+    hex: '#000000',
+    match: (hsl) => {
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return lightness <= 0.15 &&
+        saturation <= 0.10
+    }
+  },
+  {
+    name: 'Brown',
+    hex: '#974317',
+    match: (hsl) => {
+      const hue = hsl[0]
+      const saturation = hsl[1]
+      const lightness = hsl[2]
+
+      return hue >= 6 && hue <= 20 &&
+        lightness >= 0.10 && lightness <= 0.35 &&
+        saturation >= 0.40
+    }
   }
 ]
 
@@ -111,9 +189,7 @@ export const getColorNames = (
 
   for (let color of colors) {
     for (let c of COLORS) {
-      const colorAttribute = color[c.attributeIndex]
-
-      if (colorAttribute >= c.range[0] && colorAttribute <= c.range[1]) {
+      if (c.match(color)) {
         colorNames[c.name] = true
       }
     }
@@ -139,5 +215,13 @@ export const toDay = (
     return moment(date).format(TIME_FORMAT)
   } else {
     return date
+  }
+}
+
+export const truncate = (str, length) => {
+  if (str.length > length) {
+    return str.slice(0, length - 3) + '...'
+  } else {
+    return str
   }
 }
