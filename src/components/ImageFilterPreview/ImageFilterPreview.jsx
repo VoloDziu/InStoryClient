@@ -4,6 +4,10 @@ import {connect} from 'react-redux'
 import {setWidth, setHeight} from '../../store/uiActions'
 import {ListInline, ListInlineItem} from '../../Layouts/ListInline'
 import FilterPreview from '../FilterPreview'
+import {
+  logWidthRange,
+  logHeightRange
+} from '../../logger'
 
 const ImageFilterPreview = ({
   widthRange,
@@ -11,7 +15,8 @@ const ImageFilterPreview = ({
   maxWidth,
   maxHeight,
   setWidth,
-  setHeight
+  setHeight,
+  userId
 }) => {
   return (
     <ListInline>
@@ -19,7 +24,7 @@ const ImageFilterPreview = ({
         ? <ListInlineItem>
           <FilterPreview
             name={`W: ${widthRange[0]} - ${widthRange[1]}`}
-            removeCallback={() => setWidth(maxWidth)} />
+            removeCallback={() => setWidth(userId, maxWidth)} />
         </ListInlineItem>
         : ''
       }
@@ -28,7 +33,7 @@ const ImageFilterPreview = ({
         ? <ListInlineItem>
           <FilterPreview
             name={`H: ${heightRange[0]} - ${heightRange[1]}`}
-            removeCallback={() => setHeight(maxHeight)} />
+            removeCallback={() => setHeight(userId, maxHeight)} />
         </ListInlineItem>
         : ''
       }
@@ -38,16 +43,19 @@ const ImageFilterPreview = ({
 
 export default connect(
   state => ({
+    userId: state.user.id,
     widthRange: state.ui.widthRange,
     heightRange: state.ui.heightRange,
     maxWidth: state.history.maxWidth,
     maxHeight: state.history.maxHeight
   }),
   dispatch => ({
-    setWidth: (width) => {
+    setWidth: (userId, width) => {
+      logWidthRange(userId, [0, width])
       dispatch(setWidth([0, width]))
     },
-    setHeight: (height) => {
+    setHeight: (userId, height) => {
+      logHeightRange(userId, [0, height])
       dispatch(setHeight([0, height]))
     }
   })

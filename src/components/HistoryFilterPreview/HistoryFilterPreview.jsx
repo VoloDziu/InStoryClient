@@ -4,12 +4,17 @@ import {connect} from 'react-redux'
 import {toggleSelectDate, resetcheckedQueries} from '../../store/uiActions'
 import {ListInline, ListInlineItem} from '../../Layouts/ListInline'
 import FilterPreview from '../FilterPreview'
+import {
+  logSelectedDay,
+  logCheckedQueries
+} from '../../logger'
 
 const HistoryFilterPreview = ({
   selectedDate,
   toggleSelectDate,
   checkedQueries,
-  resetcheckedQueries
+  resetcheckedQueries,
+  userId
 }) => {
   return (
     <ListInline>
@@ -17,7 +22,7 @@ const HistoryFilterPreview = ({
         ? <ListInlineItem>
           <FilterPreview
             name={selectedDate}
-            removeCallback={() => toggleSelectDate(selectedDate)} />
+            removeCallback={() => toggleSelectDate(userId, selectedDate)} />
         </ListInlineItem>
         : ''
       }
@@ -26,7 +31,7 @@ const HistoryFilterPreview = ({
         ? <ListInlineItem>
           <FilterPreview
             name={`${checkedQueries.length} queries`}
-            removeCallback={() => resetcheckedQueries()} />
+            removeCallback={() => resetcheckedQueries(userId)} />
         </ListInlineItem>
         : ''
       }
@@ -37,13 +42,16 @@ const HistoryFilterPreview = ({
 export default connect(
   state => ({
     selectedDate: state.ui.selectedDate,
-    checkedQueries: state.ui.checkedQueries
+    checkedQueries: state.ui.checkedQueries,
+    userId: state.user.id
   }),
   dispatch => ({
-    toggleSelectDate: (date) => {
+    toggleSelectDate: (userId, date) => {
+      logSelectedDay(userId, null)
       dispatch(toggleSelectDate(date))
     },
-    resetcheckedQueries: () => {
+    resetcheckedQueries: (userId) => {
+      logCheckedQueries(userId, [])
       dispatch(resetcheckedQueries())
     }
   })

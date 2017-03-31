@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {DragDropContext} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
+import {logStartApp} from '../../logger'
 
 import {fetchHistory} from '../../store/historyActions'
 
@@ -54,6 +55,7 @@ export default compose(
     }),
     (dispatch, ownProps) => ({
       fetchHistory: (userId) => {
+        logStartApp(userId)
         dispatch(fetchHistory(userId))
       }
     })

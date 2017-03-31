@@ -14,6 +14,14 @@ import {
 import FilterPreview from '../FilterPreview'
 import ColorSquare from '../ColorSquare'
 import {COLORS, truncate} from '../../constants'
+import {
+  logSelectedDay,
+  logSelectedCollection,
+  logCheckedQueries,
+  logCheckedColors,
+  logWidthRange,
+  logHeightRange
+} from '../../logger'
 
 import './FiltersPreview.css'
 
@@ -31,28 +39,29 @@ const FiltersPreview = ({
   setHeightRange,
   setWidthRange,
   checkedColors,
-  uncheckAllColors
+  uncheckAllColors,
+  userId
 }) => {
   let filterElements = []
   if (selectedCollection) {
     filterElements.push(
       <FilterPreview
         name={truncate(selectedCollection.name, 15)}
-        removeCallback={resetSelectedCollection} />
+        removeCallback={() => resetSelectedCollection(userId)} />
     )
   }
   if (selectedDay) {
     filterElements.push(
       <FilterPreview
         name={selectedDay}
-        removeCallback={() => toggleSelectDay(selectedDay)} />
+        removeCallback={() => toggleSelectDay(userId, selectedDay)} />
     )
   }
   if (checkedQueries.length > 0) {
     filterElements.push(
       <FilterPreview
         name={checkedQueries.length === 1 ? '1 query' : `${checkedQueries.length} queries`}
-        removeCallback={uncheckAllQueries} />
+        removeCallback={() => uncheckAllQueries(userId)} />
     )
   }
   if (checkedColors.length > 0) {
@@ -72,7 +81,7 @@ const FiltersPreview = ({
             )}
           </Flex>
         }
-        removeCallback={uncheckAllColors}
+        removeCallback={() => uncheckAllColors(userId)}
         />
     )
   }
@@ -81,7 +90,7 @@ const FiltersPreview = ({
       <FilterPreview
         type="H:"
         name={`${heightRange[0]}-${heightRange[1]}px`}
-        removeCallback={setHeightRange} />
+        removeCallback={() => setHeightRange(userId)} />
     )
   }
   if (hasWidthRange) {
@@ -89,7 +98,7 @@ const FiltersPreview = ({
       <FilterPreview
         type="W:"
         name={`${widthRange[0]}-${widthRange[1]}px`}
-        removeCallback={setWidthRange} />
+        removeCallback={() => setWidthRange(userId)} />
     )
   }
 
@@ -170,6 +179,7 @@ export default connect(
     } = getMaxDimensions(state)
 
     return {
+      userId: state.user.id,
       selectedDay: state.selected.day,
       selectedCollection: getSelectedCollection(state),
       checkedQueries: Object.keys(state.checked.queries),
@@ -187,22 +197,28 @@ export default connect(
     }
   },
   dispatch => ({
-    resetSelectedCollection: () => {
+    resetSelectedCollection: (userId) => {
+      logSelectedCollection(userId, null)
       dispatch(resetSelectedCollection())
     },
-    uncheckAllQueries: () => {
+    uncheckAllQueries: (userId) => {
+      logCheckedQueries(userId, null)
       dispatch(uncheckAllQueries())
     },
-    uncheckAllColors: () => {
+    uncheckAllColors: (userId) => {
+      logCheckedColors(userId, null)
       dispatch(uncheckAllColors())
     },
-    toggleSelectDay: (day) => {
+    toggleSelectDay: (userId, day) => {
+      logSelectedDay(userId, null)
       dispatch(toggleSelectDay(day))
     },
-    setHeightRange: () => {
+    setHeightRange: (userId) => {
+      logHeightRange(userId, [])
       dispatch(setHeight([]))
     },
-    setWidthRange: () => {
+    setWidthRange: (userId) => {
+      logWidthRange(userId, [])
       dispatch(setWidth([]))
     }
   })

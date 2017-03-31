@@ -19,6 +19,7 @@ import {
   getColorNames,
   toDay
 } from '../../constants'
+import {logCheckedColors} from '../../logger'
 
 import './Color.css'
 
@@ -27,11 +28,12 @@ const Color = ({
   images,
   isChecked,
   checkedColors,
-  toggleCheckColor
+  toggleCheckColor,
+  userId
 }) => {
   return (
     <div
-      onClick={() => toggleCheckColor(isChecked, checkedColors, images)}
+      onClick={() => toggleCheckColor(isChecked, checkedColors, images, userId)}
       className={classnames(
         'Color',
         {
@@ -111,21 +113,26 @@ export default connect(
     return {
       isChecked: state.checked.colors[color.name],
       checkedColors: state.checked.colors,
-      images: getImages(state, ownProps)
+      images: getImages(state, ownProps),
+      userId: state.user.id
     }
   },
   (dispatch, ownProps) => {
     const {color} = ownProps
 
     return {
-      toggleCheckColor: (isChecked, checkedColors, colorImages) => {
+      toggleCheckColor: (isChecked, checkedColors, colorImages, userId) => {
         dispatch(resetSelectedImage())
 
         if (isChecked) {
+          logCheckedColors(userId, Object.keys(checkedColors).filter(c => c !== color.name))
+
           if (Object.keys(checkedColors).length > 1) {
             dispatch(uncheckImages(colorImages.map(i => i._id)))
           }
         } else {
+          logCheckedColors(userId, [color.name, ...Object.keys(checkedColors)])
+
           if (Object.keys(checkedColors).length === 0) {
             dispatch(uncheckAllImagesExcept(colorImages.map(i => i._id)))
           }

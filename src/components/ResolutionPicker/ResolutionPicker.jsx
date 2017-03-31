@@ -13,6 +13,10 @@ import Box from '../../Layouts/Box'
 import {CHANGE_TIMEOUT_DELAY} from '../../constants'
 import Slider from '../Slider'
 import Timestamp from '../Timestamp'
+import {
+  logWidthRange,
+  logHeightRange
+} from '../../logger'
 
 import './ResolutionPicker.css'
 
@@ -58,9 +62,12 @@ class ResolutionPicker extends React.Component {
   setWidth (range) {
     clearTimeout(this.state.widthChangeTimeout)
 
-    const {setWidth} = this.props
+    const {
+      setWidth,
+      userId
+    } = this.props
     const widthChangeTimeout = setTimeout(() => {
-      setWidth(range)
+      setWidth(range, userId)
     }, CHANGE_TIMEOUT_DELAY)
 
     this.setState({
@@ -72,9 +79,12 @@ class ResolutionPicker extends React.Component {
   setHeight (range) {
     clearTimeout(this.state.heightChangeTimeout)
 
-    const {setHeight} = this.props
+    const {
+      setHeight,
+      userId
+    } = this.props
     const heightChangeTimeout = setTimeout(() => {
-      setHeight(range)
+      setHeight(range, userId)
     }, CHANGE_TIMEOUT_DELAY)
 
     this.setState({
@@ -169,6 +179,7 @@ export default connect(
     } = getMaxDimensions(state)
 
     return {
+      userId: state.user.id,
       heightRange: state.image.heightRange.length === 0
         ? [0, maxHeight]
         : state.image.heightRange,
@@ -180,14 +191,16 @@ export default connect(
     }
   },
   dispatch => ({
-    setWidth: range => {
+    setWidth: (range, userId) => {
       dispatch(resetSelectedImage())
       dispatch(uncheckAllImages())
+      logWidthRange(userId, range)
       dispatch(setWidth(range))
     },
-    setHeight: range => {
+    setHeight: (range, userId) => {
       dispatch(resetSelectedImage())
       dispatch(uncheckAllImages())
+      logHeightRange(userId, range)
       dispatch(setHeight(range))
     }
   })

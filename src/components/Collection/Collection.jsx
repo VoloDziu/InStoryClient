@@ -9,6 +9,11 @@ import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
 import TextInput from '../../UI/TextInput'
 import Checkbox from '../Checkbox'
+import {
+  logSelectedCollection,
+  logEditCollection,
+  logAddImagesToCollection
+} from '../../logger'
 
 import {
   updateCollection,
@@ -92,19 +97,19 @@ class Collection extends React.Component {
   render () {
     const {
       collection,
-      images,
+      matchingImages,
       isUpdating,
       connectDropTarget,
       isOver,
       toggleSelectCollection,
-      isSelected
+      isSelected,
+      userId
     } = this.props
 
     const classes = classnames('Collection', {
       'Collection--interactive': !this.state.isEditing,
       'Collection--is-over': isOver,
-      'Collection--selected': isSelected,
-      'Collection--unavailable': images.length === 0
+      'Collection--selected': isSelected
     })
 
     if (this.state.isEditing) {
@@ -114,7 +119,7 @@ class Collection extends React.Component {
           <Flex>
             <FlexItem>
               <Checkbox
-                onClick={() => toggleSelectCollection(isSelected, images)}
+                onClick={() => toggleSelectCollection(isSelected, matchingImages, userId)}
                 checked={isSelected} />
             </FlexItem>
 
@@ -163,7 +168,7 @@ class Collection extends React.Component {
             <FlexItem
               main>
               <div
-                onClick={() => toggleSelectCollection(isSelected, images)}
+                onClick={() => toggleSelectCollection(isSelected, matchingImages, userId)}
                 className="Collection__body">
                 <Flex>
                   <FlexItem>
@@ -196,7 +201,7 @@ class Collection extends React.Component {
                 </div>
 
                 <div className="Collection__info">
-                  {images.length} images
+                  {matchingImages.length} images
                 </div>
               </div>
             </FlexItem>
@@ -211,13 +216,14 @@ const makeGetImages = () => {
   return createSelector(
     [
       (state, props) => state.history.images.filter(img => img.collectionIds.indexOf(props.collection._id) !== -1),
+      (state, props) => state.history.collections.find(c => c._id === props.collection._id),
       (state) => state.selected.day,
       (state) => state.checked.queries,
       (state) => state.checked.colors,
       (state) => state.image.widthRange,
       (state) => state.image.heightRange
     ],
-    (images, selectedDay, checkedQueries, checkedColors, widthRange, heightRange) => {
+    (images, collection, selectedDay, checkedQueries, checkedColors, widthRange, heightRange) => {
       const matchingImages = []
 
       for (let image of images) {
@@ -244,7 +250,7 @@ export default compose(
       const getImages = makeGetImages()
 
       return {
-        images: getImages(state, ownProps),
+        matchingImages: getImages(state, ownProps),
         userId: state.user.id,
         checkedImages: Object.keys(state.checked.images),
         isUpdating: state.history.isUpdating,
@@ -255,19 +261,24 @@ export default compose(
       const {collection} = ownProps
 
       return {
-        toggleSelectCollection: (isSelected, collectionImages) => {
+        toggleSelectCollection: (isSelected, collectionImages, userId) => {
           dispatch(resetSelectedImage())
 
           if (!isSelected) {
+            logSelectedCollection(userId, collection.name)
             dispatch(uncheckAllImagesExcept(collectionImages.map(i => i._id)))
+          } else {
+            logSelectedCollection(userId, null)
           }
 
           dispatch(toggleSelectCollection(collection._id))
         },
         updateCollection: (userId, collectionId, collection, callback) => {
+          logEditCollection(userId, collection.name)
           dispatch(updateCollection(userId, collectionId, collection, callback))
         },
         addImagesToCollection: (userId, collectionId, imageIds) => {
+          logAddImagesToCollection(userId, imageIds, collectionId)
           dispatch(addImagesToCollection(userId, collectionId, imageIds, false, () => {
             dispatch(resetSelectedImage())
             dispatch(uncheckAllImages())
@@ -280,7 +291,6 @@ export default compose(
     IMAGE,
     {
       drop (props, monitor) {
-        console.log(props.userId, props.collection._id, props.checkedImages)
         props.addImagesToCollection(props.userId, props.collection._id, props.checkedImages)
       }
     },

@@ -11,6 +11,10 @@ import {
   deleteImages,
   addImagesToCollection
 } from '../../store/historyActions'
+import {
+  logDeleteImages,
+  logRemoveImagesFromCollection
+} from '../../logger'
 
 import './ImageGroupActions.css'
 
@@ -93,6 +97,7 @@ export default connect(
   }),
   dispatch => ({
     deleteImages: (userId, images) => {
+      logDeleteImages(userId, images)
       dispatch(deleteImages(userId, images, () => {
         dispatch(uncheckAllImages())
       }))
@@ -101,6 +106,7 @@ export default connect(
       dispatch(uncheckAllImages())
     },
     addImagesToCollection: (userId, collectionId, imageIds) => {
+      logRemoveImagesFromCollection(userId, imageIds, collectionId)
       dispatch(addImagesToCollection(userId, collectionId, imageIds, true, () => {
         dispatch(uncheckAllImages())
         dispatch(resetSelectedImage())

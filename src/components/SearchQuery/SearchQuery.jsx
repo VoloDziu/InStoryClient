@@ -18,6 +18,7 @@ import {
   intersect,
   getColorNames
 } from '../../constants'
+import {logCheckedQueries} from '../../logger'
 
 import './SearchQuery.css'
 
@@ -26,12 +27,13 @@ const SearchQuery = ({
   matchingImages,
   checkedQueries,
   isChecked,
-  toggleCheckQuery
+  toggleCheckQuery,
+  userId
 }) => {
   return (
     <div
       onClick={() => {
-        toggleCheckQuery(query, isChecked, checkedQueries, matchingImages)
+        toggleCheckQuery(query, isChecked, checkedQueries, matchingImages, userId)
       }}
       className={classnames(
         'SearchQuery',
@@ -95,6 +97,16 @@ const makeGetImages = () => {
   )
 }
 
+const getQueries = createSelector(
+  [
+    (state) => state.checked.queries,
+    (state) => state.history.queries
+  ],
+  (checkedQueries, queries) => {
+    return queries.filter(q => checkedQueries[q._id])
+  }
+)
+
 export default connect(
   (state, ownProps) => {
     const {query} = ownProps
@@ -102,20 +114,25 @@ export default connect(
 
     return {
       isChecked: state.checked.queries[query._id],
-      checkedQueries: Object.keys(state.checked.queries),
-      matchingImages: getImages(state, ownProps)
+      checkedQueries: getQueries(state),
+      matchingImages: getImages(state, ownProps),
+      userId: state.user.id
     }
   },
   dispatch => ({
-    toggleCheckQuery: (query, isChecked, checkedQueries, queryImages) => {
+    toggleCheckQuery: (query, isChecked, checkedQueries, queryImages, userId) => {
       dispatch(resetSelectedImage())
 
       if (isChecked) {
-        if (checkedQueries.length > 1) {
+        logCheckedQueries(userId, checkedQueries.filter(q => q._id !== query._id).map(q => q.q))
+
+        if (Object.keys(checkedQueries).length > 1) {
           dispatch(uncheckImages(queryImages.map(i => i._id)))
         }
       } else {
-        if (checkedQueries.length === 0) {
+        logCheckedQueries(userId, [query.q, ...checkedQueries.map(q => q.q)])
+
+        if (Object.keys(checkedQueries.length) === 0) {
           dispatch(uncheckAllImagesExcept(queryImages.map(i => i._id)))
         }
       }

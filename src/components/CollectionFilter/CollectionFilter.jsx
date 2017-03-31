@@ -7,9 +7,12 @@ import FilterHeader from '../FilterHeader'
 import {FilterBody, FilterBodySection} from '../FilterBody'
 import {Flex, FlexItem} from '../../Layouts/Flex'
 import Button from '../../UI/Button'
+import {
+  logDeleteCollection,
+  logCreateCollection
+} from '../../logger'
 
 import {
-  toggleSelectCollection,
   resetSelectedCollection
 } from '../../store/filterActions'
 import {
@@ -24,7 +27,6 @@ const CollectionFilter = ({
   selectedCollectionId,
   isUpdating,
   userId,
-  toggleSelectCollection,
   deleteCollection,
   createCollection
 }) => {
@@ -44,7 +46,7 @@ const CollectionFilter = ({
                   color="red"
                   disabled={isUpdating}
                   onClick={() => {
-                    deleteCollection(userId, selectedCollectionId)
+                    deleteCollection(userId, selectedCollectionId, collections)
                   }}
                   link>
                   delete
@@ -89,16 +91,15 @@ export default connect(
     }
   },
   dispatch => ({
-    deleteCollection: (userId, collectionId) => {
+    deleteCollection: (userId, collectionId, collections) => {
+      logDeleteCollection(userId, collections.find(c => c._id === collectionId).name)
       dispatch(deleteCollections(userId, [collectionId], () => {
         dispatch(resetSelectedCollection())
       }))
     },
     createCollection: (userId) => {
+      logCreateCollection(userId)
       dispatch(createCollection(userId))
-    },
-    toggleSelectCollection: (collectionId) => {
-      dispatch(toggleSelectCollection(collectionId))
     }
   })
 )(CollectionFilter)

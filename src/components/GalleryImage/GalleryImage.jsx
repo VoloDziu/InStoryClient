@@ -13,6 +13,7 @@ import {
   toggleSelectImage,
   toggleCheckImage
 } from '../../store/filterActions'
+import {logSelectedImage} from '../../logger'
 
 import './GalleryImage.css'
 
@@ -66,7 +67,8 @@ class GalleryImage extends React.Component {
       toggleSelectImage,
       toggleCheckImage,
       isSelected,
-      isChecked
+      isChecked,
+      userId
     } = this.props
 
     const classes = classnames('GalleryImage', {
@@ -86,7 +88,7 @@ class GalleryImage extends React.Component {
             ? <div
               className="GI-image">
               <img
-                onClick={toggleSelectImage}
+                onClick={() => toggleSelectImage(isSelected, userId)}
                 className="GI-image__thumb"
                 src={img.thumbSrc} />
 
@@ -115,7 +117,8 @@ export default compose(
         scrollTop: state.ui.scrollTop,
         isDraggingImages: state.ui.isDraggingImages,
         isSelected: state.selected.imageId === img._id,
-        isChecked: state.checked.images[img._id]
+        isChecked: state.checked.images[img._id],
+        userId: state.user.id
       }
     },
     (dispatch, ownProps) => {
@@ -125,7 +128,13 @@ export default compose(
         toggleCheckImage: () => {
           dispatch(toggleCheckImage(img._id))
         },
-        toggleSelectImage: () => {
+        toggleSelectImage: (isSelected, userId) => {
+          if (isSelected) {
+            logSelectedImage(userId, null)
+          } else {
+            logSelectedImage(userId, img._id)
+          }
+
           dispatch(toggleSelectImage(img._id))
         },
         setDraggingImages: (value) => {

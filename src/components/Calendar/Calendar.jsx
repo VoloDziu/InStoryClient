@@ -16,6 +16,7 @@ import {
   uncheckAllQueriesExcept,
   uncheckAllQueries
 } from '../../store/filterActions'
+import {logSelectedDay} from '../../logger'
 
 import './Calendar.css'
 
@@ -24,7 +25,8 @@ const Calendar = ({
   unavailableDays,
   selectedDay,
   toggleSelectDay,
-  dayQueries
+  dayQueries,
+  userId
 }) => {
   return (
     <div className="Calendar">
@@ -35,7 +37,7 @@ const Calendar = ({
           selected: toDate(selectedDay),
           unavailable: unavailableDays.map(d => toDate(d))
         }}
-        onDayClick={d => toggleSelectDay(toDay(d), selectedDay, dayQueries)} />
+        onDayClick={d => toggleSelectDay(toDay(d), selectedDay, dayQueries, userId)} />
     </div>
   )
 }
@@ -92,6 +94,7 @@ export default connect(
     return {
       days,
       unavailableDays,
+      userId: state.user.id,
       selectedDay: state.selected.day,
       checkedQueries: Object.keys(state.checked.queries),
       dayQueries
@@ -99,17 +102,19 @@ export default connect(
   },
   dispatch => {
     return {
-      toggleSelectDay: (day, selectedDay, dayQueries) => {
-        console.log(day, selectedDay, dayQueries)
+      toggleSelectDay: (day, selectedDay, dayQueries, userId) => {
         dispatch(resetSelectedImage())
         dispatch(uncheckAllImages())
 
         if (day !== selectedDay) {
+          logSelectedDay(userId, day)
           if (dayQueries[day]) {
             dispatch(uncheckAllQueriesExcept(Object.keys(dayQueries[day])))
           } else {
             dispatch(uncheckAllQueries())
           }
+        } else {
+          logSelectedDay(userId, null)
         }
 
         dispatch(toggleSelectDay(day))
