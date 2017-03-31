@@ -8,16 +8,25 @@ const NODE_ENV = process.env.NODE_ENV || 'development'
 const getPlugins = () => {
   let plugins = []
 
-  plugins.push(new CleanWebpackPlugin(['instory'], {
-    root: path.resolve('/', 'Users', 'velz', 'webserver'),
-    exclude: ['index.html']
-  }))
+  if (NODE_ENV === 'development') {
+    plugins.push(new CleanWebpackPlugin(['instory'], {
+      root: path.resolve('/', 'Users', 'velz', 'webserver'),
+      exclude: ['index.html']
+    }))
+  } else if (NODE_ENV === 'production') {
+    plugins.push(new CleanWebpackPlugin(['dist'], {
+      root: path.resolve(__dirname),
+      exclude: ['index.html']
+    }))
+  }
 
   plugins.push(new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(NODE_ENV)
     },
-    SERVER_URL: JSON.stringify('https://localhost.com/server')
+    SERVER_URL: NODE_ENV === 'development'
+      ? JSON.stringify('https://localhost.com/server')
+      : JSON.stringify('https://vdziubak.com/instoryServer')
   }))
 
   plugins.push(new ExtractTextPlugin('styles.css'))
@@ -28,7 +37,9 @@ const getPlugins = () => {
 const config = {
   entry: path.resolve(__dirname, 'src', 'index'),
   output: {
-    path: path.resolve('/', 'Users', 'velz', 'webserver', 'instory'),
+    path: NODE_ENV === 'development'
+      ? path.resolve('/', 'Users', 'velz', 'webserver', 'instory')
+      : path.resolve(__dirname, 'dist'),
     filename: 'index.js'
   },
   resolve: {
@@ -82,7 +93,7 @@ const config = {
     ]
   },
   plugins: getPlugins(),
-  devtool: NODE_ENV === 'production' ? null : 'cheap-inline-module-source-map',
+  devtool: NODE_ENV === 'production' ? false : 'cheap-inline-module-source-map',
   watch: NODE_ENV === 'development'
 }
 
