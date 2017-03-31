@@ -64,6 +64,7 @@ const SelectedImageView = ({
                 <ListInlineItem>
                   <a
                     href={image.url}
+                    target="_new"
                     className="SelectedImageView__attr SelectedImageView__attr--link">
                     {truncate(image.src, 20)}
                   </a>
