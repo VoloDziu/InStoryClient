@@ -5958,199 +5958,185 @@ module.exports = { debugTool: debugTool };
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return logRemoveImagesFromCollection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return logDeleteImages; });
 var logStartApp = function logStartApp(userId) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'started app',
-      userId: userId
+      log: { message: 'started app' }
     })
   });
 };
 
 var logSelectedDay = function logSelectedDay(userId, day) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'selected day: ' + day,
-      userId: userId
+      log: { message: 'selected day: ' + day }
     })
   });
 };
 
 var logSelectedCollection = function logSelectedCollection(userId, collectionName) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'selected collection: ' + collectionName,
-      userId: userId
+      log: { message: 'selected collection: ' + collectionName }
     })
   });
 };
 
 var logSelectedImage = function logSelectedImage(userId, imageId) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'selected image: ' + imageId,
-      userId: userId
+      log: { message: 'selected image: ' + imageId }
     })
   });
 };
 
 var logWidthRange = function logWidthRange(userId, widthRange) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'width range: ' + widthRange[0] + ' - ' + widthRange[1],
-      userId: userId
+      log: { message: 'width range: ' + widthRange[0] + ' - ' + widthRange[1] }
     })
   });
 };
 
 var logHeightRange = function logHeightRange(userId, heightRange) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'height range: ' + heightRange[0] + ' - ' + heightRange[1],
-      userId: userId
+      log: { message: 'height range: ' + heightRange[0] + ' - ' + heightRange[1] }
     })
   });
 };
 
 var logCheckedQueries = function logCheckedQueries(userId, queries) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'checked queries: ' + queries,
-      userId: userId
+      log: { message: 'checked queries: ' + queries }
     })
   });
 };
 
 var logCheckedColors = function logCheckedColors(userId, colors) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'checked colors: ' + colors,
-      userId: userId
+      log: { message: 'checked colors: ' + colors }
     })
   });
 };
 
 var logCreateCollection = function logCreateCollection(userId) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'create new collection',
-      userId: userId
+      log: { message: 'create new collection' }
     })
   });
 };
 
 var logEditCollection = function logEditCollection(userId, collectionName) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'edit collection ' + collectionName,
-      userId: userId
+      log: { message: 'edit collection ' + collectionName }
     })
   });
 };
 
 var logDeleteCollection = function logDeleteCollection(userId, collectionName) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'delete collection ' + collectionName,
-      userId: userId
+      log: { message: 'delete collection ' + collectionName }
     })
   });
 };
 
 var logAddImagesToCollection = function logAddImagesToCollection(userId, images, collection) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'add images to collection ' + collection + ': ' + images,
-      userId: userId
+      log: { message: 'add images to collection ' + collection + ': ' + images }
     })
   });
 };
 
 var logRemoveImagesFromCollection = function logRemoveImagesFromCollection(userId, images, collection) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'remove images from collection ' + collection.name + ': ' + images.map(function (i) {
-        return i._id;
-      }),
-      userId: userId
+      log: { message: 'remove images from collection ' + collection.name + ': ' + images.map(function (i) {
+          return i._id;
+        }) }
     })
   });
 };
 
 var logDeleteImages = function logDeleteImages(userId, imageIds) {
-  fetch("https://vdziubak.com/instoryServer" + '/log/', {
+  fetch("https://vdziubak.com/instoryServer" + '/log/' + userId + '/', {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'delete image ' + imageIds,
-      userId: userId
+      log: { message: 'delete image ' + imageIds }
     })
   });
 };
