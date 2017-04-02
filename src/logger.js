@@ -1,15 +1,14 @@
 export const logStartApp = (
   userId
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'started app',
-      userId
+      log: {message: 'started app'}
     })
   })
 }
@@ -18,15 +17,14 @@ export const logSelectedDay = (
   userId,
   day
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `selected day: ${day}`,
-      userId
+      log: {message: `selected day: ${day}`}
     })
   })
 }
@@ -35,15 +33,14 @@ export const logSelectedCollection = (
   userId,
   collectionName
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `selected collection: ${collectionName}`,
-      userId
+      log: {message: `selected collection: ${collectionName}`}
     })
   })
 }
@@ -52,15 +49,14 @@ export const logSelectedImage = (
   userId,
   imageId
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `selected image: ${imageId}`,
-      userId
+      log: {message: `selected image: ${imageId}`}
     })
   })
 }
@@ -69,15 +65,14 @@ export const logWidthRange = (
   userId,
   widthRange
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `width range: ${widthRange[0]} - ${widthRange[1]}`,
-      userId
+      log: {message: `width range: ${widthRange[0]} - ${widthRange[1]}`}
     })
   })
 }
@@ -86,15 +81,14 @@ export const logHeightRange = (
   userId,
   heightRange
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `height range: ${heightRange[0]} - ${heightRange[1]}`,
-      userId
+      log: {message: `height range: ${heightRange[0]} - ${heightRange[1]}`}
     })
   })
 }
@@ -103,15 +97,14 @@ export const logCheckedQueries = (
   userId,
   queries
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `checked queries: ${queries}`,
-      userId
+      log: {message: `checked queries: ${queries}`}
     })
   })
 }
@@ -120,15 +113,14 @@ export const logCheckedColors = (
   userId,
   colors
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `checked colors: ${colors}`,
-      userId
+      log: {message: `checked colors: ${colors}`}
     })
   })
 }
@@ -136,15 +128,14 @@ export const logCheckedColors = (
 export const logCreateCollection = (
   userId
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: 'create new collection',
-      userId
+      log: {message: 'create new collection'}
     })
   })
 }
@@ -153,15 +144,14 @@ export const logEditCollection = (
   userId,
   collectionName
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `edit collection ${collectionName}`,
-      userId
+      log: {message: `edit collection ${collectionName}`}
     })
   })
 }
@@ -170,15 +160,14 @@ export const logDeleteCollection = (
   userId,
   collectionName
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `delete collection ${collectionName}`,
-      userId
+      log: {message: `delete collection ${collectionName}`}
     })
   })
 }
@@ -188,15 +177,14 @@ export const logAddImagesToCollection = (
   images,
   collection
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `add images to collection ${collection}: ${images}`,
-      userId
+      log: {message: `add images to collection ${collection}: ${images}`}
     })
   })
 }
@@ -206,15 +194,14 @@ export const logRemoveImagesFromCollection = (
   images,
   collection
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `remove images from collection ${collection.name}: ${images.map(i => i._id)}`,
-      userId
+      log: {message: `remove images from collection ${collection.name}: ${images.map(i => i._id)}`}
     })
   })
 }
@@ -223,15 +210,14 @@ export const logDeleteImages = (
   userId,
   imageIds
 ) => {
-  fetch(`${SERVER_URL}/log/`, {
+  fetch(`${SERVER_URL}/log/${userId}/`, {
     mode: 'cors',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      log: `delete image ${imageIds}`,
-      userId
+      log: {message: `delete image ${imageIds}`}
     })
   })
 }
