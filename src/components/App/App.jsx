@@ -32,8 +32,8 @@ class App extends React.Component {
         <div className="App">
           <div className="App__sidebar">
             <HistoryFilter />
-            <CollectionFilter />
-            <ImageFilter />
+            {/* <CollectionFilter />
+            <ImageFilter /> */}
           </div>
 
           <div className="App__body">
